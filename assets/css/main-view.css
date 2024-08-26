@@ -1,0 +1,32 @@
+body {
+    padding-top: 56px;
+        /* Adjust padding to prevent content overlap with fixed navbar */
+        /* margin: 0; */
+        font-family: Arial, sans-serif;
+        
+}
+.active{
+    color:#fac031 !important;
+}
+#calendar {
+    height: 100vh; /* Full height calendar */
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 1200px;
+}
+   /* Custom styles for the calendar */
+   .custom-schedule {
+    background: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+}
+.custom-schedule .title {
+    font-weight: bold;
+}
+.custom-schedule .time {
+    color: #555;
+}
+.tui-view-8 {
+    height: 50% !important;
+}
