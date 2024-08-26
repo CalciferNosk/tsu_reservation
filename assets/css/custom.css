@@ -1,0 +1,22 @@
+html,body {
+    background-image: linear-gradient(to bottom, #800000cf, #ffc6327a);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* background-color: #ffc632 !important; */
+}
+.tsu-btn{
+    background-color: #ffc632;
+    color: #800000;
+    border: 1px solid #800000;
+    border-radius: 5px;
+    font-size: 18px;
+    width: 50%;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+h1{
+    text-transform: uppercase;
+}

@@ -86,3 +86,4 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 
 defined('BASE_URL') ?  null : define('BASE_URL', 'http://localhost/tsu_reservation');
+defined('IMG_LOGO') ?  null : define('IMG_LOGO', './assets/image/tsu-logo.png');
