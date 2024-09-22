@@ -1,4 +1,4 @@
-<?= _headerLayout(['main-view'], 'Main View') ?>
+<?= _headerLayout(['main-view'], 'EVENT | MAIN VIEW') ?>
 <style>
     .border-line-left {
         border-left: 1px solid #80808045;
