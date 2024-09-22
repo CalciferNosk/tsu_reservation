@@ -4,6 +4,7 @@ $(document).ready(function () {
 		$(".nav-link").removeClass("active");
 		$(this).addClass("active");
 		$(".content_div").hide();
+		sessionStorage.setItem("nav", content);
 		$("#" + content + "_content").show();
 	});
 
