@@ -38,6 +38,18 @@ class MainController extends CI_Controller
 		if (empty($result->Username)) {
 			$data['courses'] = $this->main_m->getCourses();
 		}
+		else{
+			$event_control = [];
+			$event_data = $this->main_m->getEventList($event_control);
+			foreach ($event_data as $key => $event) {
+				$reserve_data =$this->main_m->getAttendees($event->EventId);
+				$event->AttendeeCount = count($reserve_data);
+				$event->ReserveData = base64_encode(json_encode($reserve_data));
+			}
+			$data['event_list'] = $event_data;
+		}
+		// var_dump('<pre>',$data['event_list']);die;
+
 		$this->load->view('MainModule/MainView', $data);
 	}
 
@@ -71,16 +83,21 @@ class MainController extends CI_Controller
 	}
 
 	public function fetchHomeContent(){
-
-		$result = $this->main_m->getContent();
+		#get if from post
+		$ids_input = empty($_POST['ids']) ? '' : $_POST['ids'];
+		
+		$result = $this->main_m->getContent($ids_input);
+		$ids=[];
 		foreach ($result as $key => $value) {
+			array_push($ids, $value->ContentId);
 			$value->comments = $this->main_m->getComments($value->ContentId);
 		}
 		// var_dump($result);die;
 		$data['result'] = $result;
-		$content_html = $this->load->view('HomeModule/HomeContentView', $data, true);
+		$data['ids'] = empty($ids) ? $ids_input  : implode(',', $ids);
+		$data['html'] = $this->load->view('HomeModule/HomeContentView', $data, true);
 
-		echo json_encode($content_html);
+		echo json_encode($data);
 
 	}
 }

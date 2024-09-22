@@ -1,6 +1,23 @@
 <?= _headerLayout(['main-view'], 'Main View') ?>
+<style>
+    .border-line-left {
+        border-left: 1px solid #80808045;
+    }
 
-<body>
+    .border-line-right {
+        border-right: 1px solid #80808045;
+    }
+
+    .display-content {
+        display: contents;
+    }
+
+    .th_class {
+        text-align: center;
+    }
+</style>
+
+<body style="background-color: #fbfbef;">
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #800000;">
@@ -21,10 +38,10 @@
                         <a class="nav-link active" data-content="home" id="nav_home" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-content="event" href="#">Event List</a>
+                        <a class="nav-link" data-content="event" id="nav_event" href="#">Event List</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-content="calendar" href="#">Calendar</a>
+                        <a class="nav-link" data-content="calendar" id="nav_calendar" href="#">Calendar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
@@ -126,13 +143,34 @@
         <div class="container-fluid ">
             <div class="content_div justify-content-center" id="home_content">
                 <div class="row">
-                    <div class="col-md-3"></div>
+                    <div class="col-md-3 border-line-right">
+                        <div class="card m-2 p-2">
+                            <div class="d-flex">
+                                <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle"
+                                    height="50" alt="Avatar" loading="lazy" />
+                                <div class="d-flex align-items-center w-100 ps-3">
+                                    <div class="w-100">
+                                        <span class="d-block mb-1"><?= _getUserFullName($_SESSION['username']) ?> <br>
+                                            <span class="text-muted small">College of Computer Studies</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card m-2 p-2">
+                            <center>
+                                <h6>MY EVENT</h6>
+                            </center>
+                            <hr>
+                            <div id="home_event_list_join">
+                                <center><i>No Event found</i></center>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-6">
-
                         <div class="row">
-                            <div class="card-body border-bottom pb-2 shadow-lg mt-3 p-5" style="border-radius: 14px;">
+                            <div class="card-body border-bottom pb-2 shadow-lg m-3 p-5" style="border-radius: 14px;background-color: white">
                                 <div class="d-flex">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img (31).webp" class="rounded-circle"
+                                    <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle"
                                         height="50" alt="Avatar" loading="lazy" />
                                     <div class="d-flex align-items-center w-100 ps-3">
                                         <div class="w-100">
@@ -143,44 +181,134 @@
                                             <div class="m-3">
                                                 <button type="button" style="float: inline-end;" class="btn btn-primary btn-sm">Post</button>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <br>
                             <br>
-                            <div class="row mt-5 shodow-lg" id="home_content_feed"></div>
-
+                            <!-- all news feed here -->
+                            <div class="row mt-5 shodow-lg  display-content" id="home_content_feed"></div>
+                            <div>
+                                <center><a class="btn btn-primary" id="load_more">Load more feed</a></center>
+                            </div>
                         </div>
-                        <div class="col-md-3"></div>
                     </div>
-
+                    <div class="col-md-3 border-line-left"></div>
                 </div>
-                <div class="content_div" id="event_content" style="display: none;">
-                    event
-                </div>
-                <div class="content_div" id="calendar_content" style="display: none;">
-                    <div id="calendar"></div>
-                </div>
-
             </div>
-        <?php endif; ?>
+            <div class="content_div" id="event_content" style="display: none;">
+                <div id="event_list_div" class="card m-3">
+                    <div class="card-header p-3">
+                        Event List
+                    </div>
+                    <div class="card-body">
+                        <table class="table align-middle mb-0 bg-white">
+                            <thead class="bg-light table-light">
+                                <tr>
+                                    <th class="th_class">EVENT NAME</th>
+                                    <th class="th_class">EVENT START</th>
+                                    <th class="th_class">ORGANIZER</th>
+                                    <th class="th_class">CAPACITY</th>
+                                    <th class="th_class">EVENT STATUS</th>
+                                    <th class="th_class">REGISTRATION DEADLINE</th>
+                                    <th class="th_class">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($event_list as $key => $value) : ?>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="ms-3">
+                                                    <p class="fw-bold mb-1"><?= strtoupper($value->EventName) ?></p>
+                                                    <p class="text-muted mb-0">Location : <?= $value->LocationName ?></p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="fw-normal mb-1"><?= date('M j, Y hA', strtotime($value->EventStart));  ?> </p>
+                                            <!-- <p class="fw-normal mb-1">End : <?= date('M j, Y', strtotime($value->EventEnd));  ?></p> -->
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img
+                                                    src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($value->EventOrganizer) ?>"
+                                                    alt=""
+                                                    style="width: 45px; height: 45px"
+                                                    class="rounded-circle" />
+                                                <div class="ms-3">
+                                                    <p class="fw-bold mb-1"><?= strtoupper(_getUserFullName($value->EventOrganizer)) ?></p>
+                                                    <p class="text-muted mb-0"><?= _getUserRole($value->EventOrganizer) ?></p>
+                                                </div>
+                                            </div>
 
 
-        <?= _footerLayout(['main-view']) ?>
-        <?php if (!empty($user_data->Username)): ?>
-            <script src="<?php echo base_url('assets/js/main-view-home.js'); ?>"></script>
-        <?php endif; ?>
-        <script>
-            $(document).ready(function() {
-                $new_user = `<?= empty($user_data->Username) ? 1 : 0 ?>`;
+                                        </td>
+                                        <td>
+                                            <center><?= $value->AttendeeCount . '/' . $value->EventSlot ?></center>
+                                        </td>
+                                        <td>
+                                            <?= _getStatusBadge($value) ?>
+                                        </td>
+                                        <td>
+                                            <center><?= date('M j, Y', strtotime($value->EventReservationEnd));  ?></center>
+                                        </td>
+                                        <td>
+                                            <?php if (_getDateStatus($value->EventReservationEnd)  == 1):  ?>
+                                                <button type="button" class="btn btn-secondary btn-sm btn-rounded">
+                                                    Closed
+                                                </button>
+                                            <?php else: ?>
+                                                <button type="button" class="btn btn-success btn-sm btn-rounded">
+                                                    Reserve now
+                                                </button>
+                                               
+                                            <?php endif; ?>
+                                             
+                                            <?php if(in_array($_SESSION['username'], [$value->EventOrganizer,$value->CreatedBy])): ?>
+                                                    <button type="button" class="btn btn-primary btn-sm btn-rounded">
+                                                    edit
+                                                </button>
+                                                <?php endif; ?>
 
-                if ($new_user == 1) {
-                    $('#newUserModal').modal('show');
-                }
-            })
-        </script>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="content_div" id="calendar_content" style="display: none;">
+                <div id="calendar">cale</div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <?= _footerLayout(['main-view']) ?>
+
+    <script>
+        $(document).ready(function() {
+            $new_user = `<?= empty($user_data->Username) ? 1 : 0 ?>`;
+
+            if ($new_user == 1) {
+                $('#newUserModal').modal('show');
+            }
+            $(".content_div").hide();
+            var content = sessionStorage.getItem("nav");
+            $('.nav-link').removeClass('active');
+            $('#nav_' + content).addClass('active');
+            $("#" + content + "_content").show();
+        })
+    </script>
+    <?php if (!empty($user_data->Username)): ?>
+        <script src="<?php echo base_url('assets/js/main-view-home.js'); ?>"></script>
+        <script src="<?php echo base_url('assets/js/event-list.js'); ?>"></script>
+    <?php endif; ?>
 </body>
 
 </html>
