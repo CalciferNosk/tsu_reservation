@@ -53,7 +53,11 @@ $route['default_controller'] = 'LoginController';
 $route['login/(:any)'] = 'LoginController/loginAuth/$1';
 
 $route['main-view'] = 'MainController/mainView';
-$route['logout'] = 'LoginController/logout';
+$route['user-setup'] = 'MainController/userSetup';
+$route['fetch-home-content'] = 'MainController/fetchHomeContent';
+
+
+$route['logout'] = 'logoutController/logout';
 
 
 $route['404_override'] = '';

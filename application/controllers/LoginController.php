@@ -22,10 +22,10 @@ class LoginController extends CI_Controller {
 	public function __construct(){
 
 		parent::__construct();
+		$this->load->model('LoginModel','log_m');
 		if(isset($_SESSION['username'])){
             redirect('main-view');
         }
-
 	}
 
 	public function index()
@@ -38,22 +38,47 @@ class LoginController extends CI_Controller {
 			echo 'invalid request';
 			exit;
 		}
-		$email = $this->input->post('email');
-		$pass = $this->input->post('password');
+		$input_email = $this->input->post('email');
+		$input_pass = $this->input->post('password');
 		$data['status'] = 400;
 		$data['result'] = false;
 		$data['message'] = 'Login Failed';
 
-		// var_dump($user);die;	
+	
 		if($user == 'student'){
-			$api_result = $this->userAPICheck($email,$pass);
+			#check user if exist in table
+			$user_check = $this->log_m->checkUserExist($input_email);
+			
+			# if not exist in table validate email in tsu api
+			if(empty($user_check)){
+				$api_result = $this->userAPICheck($input_email,$input_pass);
 
-			if(!empty($api_result)){
-				$data['message'] = 'Login Success';
-				$data['status'] = 200;
+				#check if api result is true
+				if(!empty($api_result)){
+					$this->log_m->addUser($input_email,$input_pass);
+					$data['message'] = 'Login Success';
+					$data['status'] = 200;
+					$data['result'] = $api_result;
+					#session start
+					$this->startSession($input_email,$input_pass);
+				}
 				$data['result'] = $api_result;
 			}
-			$data['result'] = $api_result;
+			else{
+				if (password_verify($input_pass, $user_check->Password)) {
+					$data['message'] = 'Login Success';
+					$data['status'] = 200;
+					$data['result'] = $user_check;
+					#session start
+					$username = empty($user_check->Username) ? $input_email : $user_check->Username;
+					$this->startSession($username ,$input_pass);
+				}
+				else{
+					$data['message'] = 'Password Failed';
+				}
+			}
+			
+			
 			
 		}
 
@@ -65,10 +90,14 @@ class LoginController extends CI_Controller {
         $this->load->view('LoginModule/LoginSuperAdminView');
     }
 
-	private function userAPICheck($email,$pass){
+
+	private function startSession($email,$pass){
 		$_SESSION['email'] = $email;
 		$_SESSION['password'] = $pass;
 		$_SESSION['username'] = $email;
+	}
+	private function userAPICheck($email,$pass){
+		#add api call for tsu api
 		return true;
 	}
 	public function logout(){
