@@ -11,6 +11,8 @@ class MainModel extends CI_Model
     protected $tbl_event_type = "tbl_event_type";
     protected $tbl_event_location = "tbl_event_location";
     protected $tbl_event_attendees = "tbl_event_attendees";
+    protected $tbl_workgroup = "tbl_workgroup";
+    protected $tbl_workgruop_access = "tbl_workgruop_access";
 
     public function __construct()
     {   
@@ -45,7 +47,7 @@ class MainModel extends CI_Model
         if(!empty($ids)){
             $WHERE = " AND ContentId NOT IN ({$ids})";
         }
-        $sql = "SELECT * FROM {$this->tbl_content} WHERE DeletedTag = 0 {$WHERE} ORDER BY ContentId DESC LIMIT 5";
+        $sql = "SELECT * FROM {$this->tbl_content} WHERE DeletedTag = 0 {$WHERE} ORDER BY ContentId DESC LIMIT 3";
         return $this->db->query($sql)->result_object();
     }
 
@@ -57,7 +59,14 @@ class MainModel extends CI_Model
 
     public function getUserFullName($username){
 
-        $sql = "SELECT concat(Fname, ' ',Lname) as `name`,ProfilePhoto,Role FROM {$this->tbl_user} WHERE Username = '{$username}'";
+        $sql = "SELECT concat(u.Fname, ' ',u.Lname) as `name`,u.ProfilePhoto,wg.WorkgroupName as Role
+                FROM {$this->tbl_user}  u
+                LEFT JOIN  $this->tbl_workgroup wg on wg.wid = u.Role
+
+                WHERE u.Username = '{$username}'";
+
+                // var_dump($sql);
+        
         return $this->db->query($sql)->row();
     }
 
@@ -84,7 +93,46 @@ class MainModel extends CI_Model
 
     public function getAttendees($eventId){
 
-        $sql = "SELECT * FROM {$this->tbl_event_attendees} WHERE EventId = {$eventId}";
-        return $this->db->query($sql)->result_object();
+        $sql = "SELECT * FROM {$this->tbl_event_attendees} WHERE EventId = {$eventId} AND DeletedTag = 0";
+   
+        $result = $this->db->query($sql)->result_object();
+        foreach ($result as $key => $value) {
+            $value->FullName = _getUserFullName($value->Username);
+        }
+
+        return $result;
     }
+
+   public function reserveEventSlot($event_id,$user_id){
+    $data = [
+
+        'Username' => $user_id,
+        'EventId'  => $event_id,
+        'EventReserveDate' => date('Y-m-d H:i:s')
+    ];
+
+    return $this->db->insert($this->tbl_event_attendees,$data);
+   }
+
+   public function getWorkgroupAccess($workgroup_id){
+
+    $sql = "SELECT * FROM {$this->tbl_workgruop_access} WHERE WorkgroupId = {$workgroup_id}"; 
+ 
+    return $this->db->query($sql)->result_object();
+   }
+   public function getMyEvent($Username){
+    $get_attendees = "
+                SELECT 
+                    *
+                FROM
+                    {$this->tbl_event_attendees} as a
+                LEFT JOIN 
+                    {$this->tbl_event_list} el  on a.EventId = el.EventId
+                    
+                WHERE
+                    a.Username = '{$Username}'
+                    
+                ORDER BY el.EventStart ";
+        return $this->db->query($get_attendees)->result_object();
+   }
 }

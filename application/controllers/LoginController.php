@@ -56,7 +56,7 @@ class LoginController extends CI_Controller {
 				#check if api result is true
 				if(!empty($api_result)){
 					$this->log_m->addUser($input_email,$input_pass);
-					$data['message'] = 'Login Success';
+					$data['message'] = 'USER VERIFIED';
 					$data['status'] = 200;
 					$data['result'] = $api_result;
 					#session start
@@ -66,12 +66,13 @@ class LoginController extends CI_Controller {
 			}
 			else{
 				if (password_verify($input_pass, $user_check->Password)) {
-					$data['message'] = 'Login Success';
+					$data['message'] = 'LOGIN SUCCESS';
 					$data['status'] = 200;
 					$data['result'] = $user_check;
 					#session start
 					$username = empty($user_check->Username) ? $input_email : $user_check->Username;
-					$this->startSession($username ,$input_pass);
+					$role = $user_check->Role;
+					$this->startSession($input_email ,$input_pass,$username,$role);
 				}
 				else{
 					$data['message'] = 'Password Failed';
@@ -91,10 +92,11 @@ class LoginController extends CI_Controller {
     }
 
 
-	private function startSession($email,$pass){
+	private function startSession($email,$pass,$username = null,$role){
 		$_SESSION['email'] = $email;
 		$_SESSION['password'] = $pass;
-		$_SESSION['username'] = $email;
+		$_SESSION['username'] = empty($username) ? $email : $username;
+		$_SESSION['role'] = (int)$role;
 	}
 	private function userAPICheck($email,$pass){
 		#add api call for tsu api

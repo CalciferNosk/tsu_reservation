@@ -15,6 +15,7 @@ class LoginModel extends CI_Model
 
         $this->db->where('Email', $email);
         $query = $this->db->get($this->tbl_user);
+        // var_dump($this->db->last_query());die;   
         return $query->row();
     }
 

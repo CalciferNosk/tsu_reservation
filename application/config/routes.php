@@ -55,6 +55,7 @@ $route['login/(:any)'] = 'LoginController/loginAuth/$1';
 $route['main-view'] = 'MainController/mainView';
 $route['user-setup'] = 'MainController/userSetup';
 $route['fetch-home-content'] = 'MainController/fetchHomeContent';
+$route['reserve-event-slot'] = 'MainController/reserveEventSlot';
 
 
 $route['logout'] = 'logoutController/logout';

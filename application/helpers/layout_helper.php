@@ -52,8 +52,9 @@ if( ! function_exists('_getUserFullName')){
 if( ! function_exists('_getUserProfile')){
 
     function _getUserProfile($username){
+
+       
         $CI =& get_instance();
-        
        $CI->load->model('MainModel','main_m');
        
        $fullname = $CI->main_m->getUserFullName($username)->ProfilePhoto;
@@ -152,6 +153,20 @@ if( ! function_exists('_getStatusBadge')){
         
     }
 }
+
+if( ! function_exists('_getWorkgroupAccess')){
+
+    function _getWorkgroupAccess($access_name){
+      
+        $CI =& get_instance();
+       $CI->load->model('MainModel','main_m');
+        $role_id = $_SESSION['role'];
+       $check_access = $CI->main_m->getWorkgroupAccess($role_id)[0]->$access_name;
+
+       return (int)$check_access;
+    }
+}
+
 
 
 ?>

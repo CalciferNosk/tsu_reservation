@@ -6,7 +6,7 @@
         <!-- Data -->
         <div class="d-flex mb-3">
           <a href="">
-            <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($value->PostCreatedby) ?>" class="border rounded-circle me-2"
+            <img src="<?= base_url() ?>assets/user_profile/<?= empty(_getUserProfile($value->PostCreatedby)) ? 'default_user.jpg' : _getUserProfile($value->PostCreatedby) ?>" class="border rounded-circle me-2"
               alt="Avatar" style="height: 40px" />
           </a>
           <div>

@@ -32,9 +32,10 @@ class MainController extends CI_Controller
 
 	public function mainView()
 	{
+		// var_dump($_SESSION);die;
 		$result = $this->log_m->checkUserExist($_SESSION['email']);
 		$data['user_data'] = $result;
-		// var_dump($result->Username);die;
+		// var_dump($_SESSION);die;
 		if (empty($result->Username)) {
 			$data['courses'] = $this->main_m->getCourses();
 		}
@@ -47,6 +48,7 @@ class MainController extends CI_Controller
 				$event->ReserveData = base64_encode(json_encode($reserve_data));
 			}
 			$data['event_list'] = $event_data;
+			$data['my_event'] = $this->main_m->getMyEvent($result->Username);
 		}
 		// var_dump('<pre>',$data['event_list']);die;
 
@@ -92,6 +94,10 @@ class MainController extends CI_Controller
 			array_push($ids, $value->ContentId);
 			$value->comments = $this->main_m->getComments($value->ContentId);
 		}
+		if(!empty($_POST['ids'])){
+			$ids = array_merge($ids,explode(',', $ids_input));
+		}
+		
 		// var_dump($result);die;
 		$data['result'] = $result;
 		$data['ids'] = empty($ids) ? $ids_input  : implode(',', $ids);
@@ -100,4 +106,23 @@ class MainController extends CI_Controller
 		echo json_encode($data);
 
 	}
+
+	public function reserveEventSlot(){
+		$attendees_count = $this->checkEventSlot($_POST['event_id']);
+		$slot = (int) $_POST['slot'];
+		$data['reserve_status'] = 0;
+		$data['result']  		= 0;
+		if($attendees_count < $slot){
+			$data['result'] = $this->main_m->reserveEventSlot($_POST['event_id'],$_SESSION['username']);
+			$data['reserve_status'] = 1;
+		}
+		echo json_encode($data);
+	}
+
+	private function checkEventSlot($event_id){
+		$get_reserve_attendees = $this->main_m->getAttendees($event_id);
+
+		return count($get_reserve_attendees);
+	}
+
 }

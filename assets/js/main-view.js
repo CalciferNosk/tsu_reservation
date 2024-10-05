@@ -1,10 +1,10 @@
 $(document).ready(function () {
-	$(document).on("click", ".nav-link", function () {
+	$(document).on("click", ".tab-link", function () {
 		var content = $(this).data("content");
-		$(".nav-link").removeClass("active");
-		$(this).addClass("active");
+		$(".tab-link").removeClass("active_tab");
+		$(this).addClass("active_tab");
 		$(".content_div").hide();
-		sessionStorage.setItem("nav", content);
+		sessionStorage.setItem("nav"+username, content);
 		$("#" + content + "_content").show();
 	});
 

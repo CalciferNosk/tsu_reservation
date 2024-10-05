@@ -5,8 +5,9 @@
       <div class="card text-center mx-4  mt-5">
         <div class="card-body p-4">
 
-          <img src="<?= base_url('assets/image/tsu-logo.png') ?>" alt="">
-          <h1><?= $title ?></h1>
+          <img src="<?= base_url('assets/image/tsu-logo.png') ?>" id="login_logo" alt="">
+          <br>
+          <h1 id="login_title"><?= $title ?></h1>
           <p class="text-muted">Sign in to your account</p>
           <!-- Email input -->
           <form action="#" method="POST" ecrypt="multipart/form-data">
