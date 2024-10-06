@@ -295,7 +295,9 @@ $config['error_views_path'] = '';
 | application/cache/ directory.  Use a full server path with trailing slash.
 |
 */
-$config['cache_path'] = '';
+$config['cache_path'] = './cache/';
+$config['cache_query_string'] = FALSE;
+$config['cache_enabled'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------

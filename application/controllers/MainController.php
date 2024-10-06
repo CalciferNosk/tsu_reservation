@@ -49,6 +49,7 @@ class MainController extends CI_Controller
 			}
 			$data['event_list'] = $event_data;
 			$data['my_event'] = $this->main_m->getMyEvent($result->Username);
+			
 		}
 		// var_dump('<pre>',$data['event_list']);die;
 
@@ -124,5 +125,12 @@ class MainController extends CI_Controller
 
 		return count($get_reserve_attendees);
 	}
+	public function deleteEvent(){
+		$event_id = $_POST['event_id'];
+		$result = $this->main_m->deleteEvent($event_id);
+
+		echo json_encode($result);
+	}
+
 
 }

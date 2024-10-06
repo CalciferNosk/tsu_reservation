@@ -1,10 +1,7 @@
 $(document).ready(function () {
 	console.log("home load");
 	sessionStorage.setItem("ids", JSON.stringify(""));
-	$("#attendees_list_table").DataTable({
-	  "lengthChange": false,
-	  "searching": false
-	});
+	
 	fetchHomeContent();
 	// var home_content = false;
 
@@ -158,12 +155,7 @@ $(document).ready(function () {
 	
 	})
 
-	$(document).on('click','.event-edit',function(){
-		$('#editEventModal').modal('show');
-	})
-	$(document).on('click','#create_event',function(){
-		$('#addEventModal').modal('show');
-	})
+	
 	
 	function fetchHomeContent() {
 		var url = base_url + "fetch-home-content";
@@ -184,4 +176,8 @@ $(document).ready(function () {
 			},
 		});
 	}
+
+
+	
 });
+
