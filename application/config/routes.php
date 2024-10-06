@@ -57,6 +57,15 @@ $route['user-setup'] = 'MainController/userSetup';
 $route['fetch-home-content'] = 'MainController/fetchHomeContent';
 $route['reserve-event-slot'] = 'MainController/reserveEventSlot';
 
+# action button
+$route['delete-event'] = 'MainController/deleteEvent';
+$route['add-event'] = 'EventController/addEvent';
+
+
+#event module
+$route['view-event/(:num)'] = 'EventController/viewEvent/$1';
+$route['get-all-user'] = 'EventController/getAllUser';
+
 
 $route['logout'] = 'logoutController/logout';
 

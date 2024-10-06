@@ -70,6 +70,30 @@ class MainModel extends CI_Model
         return $this->db->query($sql)->row();
     }
 
+
+
+
+    public function getAllUsers()
+    {
+        $this->load->driver('cache');
+        $sql = "SELECT * FROM {$this->tbl_user} WHERE DeletedTag = 0";
+        $cache_id = 'getAllUsers';
+
+        if (!$this->cache->get($cache_id)) {
+            $result = $this->db->query($sql)->result_object();
+            $this->cache->save($cache_id, $result, 3600); // cache for 1 hour
+        } else {
+            $result = $this->cache->get($cache_id);
+        }
+
+        return $result;
+    }
+
+    public function clearCache()
+    {
+        $this->load->driver('cache');
+        return $this->cache->clean();
+    }
     public function getEventList($event_control){
         $control= '';
         if(!empty($event_control)){
@@ -135,4 +159,17 @@ class MainModel extends CI_Model
                 ORDER BY el.EventStart ";
         return $this->db->query($get_attendees)->result_object();
    }
+
+   public function deleteEvent($event_id){
+
+    $sql = "UPDATE {$this->tbl_event_list} SET DeletedTag = 1 WHERE EventId = {$event_id}";
+    return $this->db->query($sql);
+   }
+   public function getAllLocation(){
+
+    $sql = "SELECT * FROM {$this->tbl_event_location}";
+    return $this->db->query($sql)->result_object();
+   }
+   
+ 
 }

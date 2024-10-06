@@ -6,7 +6,7 @@ body {
         
 }
 .active{
-    color:#fac031 !important;
+    /* color:#fac031 ; */
 }
 #calendar {
     height: 100vh; /* Full height calendar */

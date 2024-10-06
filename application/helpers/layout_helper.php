@@ -49,6 +49,26 @@ if( ! function_exists('_getUserFullName')){
     }
 }
 
+if( ! function_exists('_getAllUsers')){
+
+    function _getAllUsers(){
+        $CI =& get_instance();
+       $CI->load->model('MainModel','main_m');
+       $alluser = $CI->main_m->getAllUsers();
+        return $alluser;
+    }
+}
+
+if( ! function_exists('_cacheClean')){
+
+    function _cacheClean(){
+        $CI =& get_instance();
+       $CI->load->model('MainModel','main_m');
+       $alluser = $CI->main_m->clearCache();
+        return $alluser;
+    }
+}
+
 if( ! function_exists('_getUserProfile')){
 
     function _getUserProfile($username){
@@ -166,7 +186,28 @@ if( ! function_exists('_getWorkgroupAccess')){
        return (int)$check_access;
     }
 }
+if( ! function_exists('_getAllLocation')){
 
+    function _getAllLocation(){
+      
+        $CI =& get_instance();
+       $CI->load->model('MainModel','main_m');
+       $location = $CI->main_m->getAllLocation();
+
+       return $location;
+    }
+}
+if( ! function_exists('_checkUserEvent')){
+
+    function _checkUserEvent($username,$event_id){
+      
+        $CI =& get_instance();
+       $CI->load->model('EventModel','event_m');
+       $check = $CI->event_m->checkUserEvent($username,$event_id);
+
+       return $check;
+    }
+}
 
 
 ?>
