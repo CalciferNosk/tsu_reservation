@@ -24,7 +24,8 @@ class LoginModel extends CI_Model
         $data = array(
             'Email' => $email,
             'Password' =>password_hash($pass, PASSWORD_DEFAULT),
-            'salt'  => '$2y$10$4K5jV4Q4K5jV4Q4K5jV4Q4K5jV4Q4K5jV4Q4K5jV4Q4K5j'
+            'salt'  => '$2y$10$4K5jV4Q4K5jV4Q4K5jV4Q4K5jV4Q4K5jV4Q4K5jV4Q4K5j',
+            
         );
 
        return $this->db->insert($this->tbl_user,$data);

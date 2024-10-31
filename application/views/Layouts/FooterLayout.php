@@ -1,12 +1,13 @@
 
 <script>
-    var base_url = '<?php echo base_url(); ?>';
+    const base_url = '<?php echo base_url(); ?>';
 </script>
 
 <script src="<?php echo base_url('assets/js/mdb.min.js'); ?>"></script>
 
 <!-- <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar-all.min.js"></script> -->
- 
+ <!-- MDB -->
+
 
 <script src="https://uicdn.toast.com/tui.code-snippet/v1.5.2/tui-code-snippet.min.js"></script>
 <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
@@ -25,4 +26,4 @@
     <?php  foreach($custom_js as $key => $value): ?>
         <script src="<?= base_url(); ?>assets/js/<?= $value ?>.js"></script>
     <?php endforeach; ?>
-    
+    <script src="<?php echo base_url('assets/js/custom_toast.js'); ?>"></script>

@@ -30,9 +30,86 @@ $(document).ready(function () {
         });
 
 
-	$(document).on("click", ".event-edit", function () {
+	$(document).on("click", ".event-edit", function (e) {
+
+   
+        var event_data = $(this).data("rowdata");
+        var data = JSON.parse(atob(event_data));
+        console.log(data.EventStart);
+       $('#edit-event-name').val(data.EventName);
+       $('#edit-event-location').val(data.EventLocationId);
+       $('#edit-event-organizer').val(data.EventOrganizer);
+       $('#edit-event-slot').val(data.EventSlot);
+       $('#edit-event-start').val(data.EventStart);
+       $('#edit-event-end').val(data.EventEnd);
+       $('#edit-event-reservation_start').val(data.EventReservationStart);
+       $('#edit-event-reservation_end').val(data.EventReservationEnd);
+       $('#edit-event-description').summernote('code',data.Description);
+       $('#edit-event-id').val(data.EventId);
 		$("#editEventModal").modal("show");
 	});
+
+    $(document).on('submit','#editEventForm',function(e){
+        e.preventDefault();
+        console.log("edit event submit");
+      var edit_event_name             =   $('#edit-event-name').val();
+      var edit_event_location         =  $('#edit-event-location').val();
+      var edit_event_organizer        =  $('#edit-event-organizer').val();
+      var edit_event_slot             =  $('#edit-event-slot').val();
+      var edit_event_start      =  $('#edit-event-start').val();
+      var edit_event_end        =  $('#edit-event-end').val();
+      var edit_reservation_start=  $('#edit-event-reservation_start').val();
+      var edit_reservation_end  =  $('#edit-event-reservation_end').val();
+      var edit_event_description=  $('#edit-event-description').val();
+      var edit_event_id         =  $('#edit-event-id').val();
+
+      var formdata = new FormData();
+      formdata.append('edit_name',edit_event_name);
+      formdata.append('edit_location',edit_event_location);
+      formdata.append('edit_organizer',edit_event_organizer);
+      formdata.append('edit_slot',edit_event_slot);
+      formdata.append('edit_event_start',edit_event_start);
+      formdata.append('edit_event_end',edit_event_end);
+      formdata.append('edit_reservation_start',edit_reservation_start);
+      formdata.append('edit_reservation_end',edit_reservation_end);
+      formdata.append('edit_event_description',edit_event_description);
+      formdata.append('edit_event_id',edit_event_id);
+
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Please confirm to Update event!",
+        // icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Update!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: base_url + "update-event",
+                type: "POST",
+                data: formdata,
+                contentType: false,
+                processData: false,
+                dataType: "json",
+                success: function (response) {
+                    if (response == 1) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success!",
+                            text: "Event updated successfully!",
+                            showCancelButton: false,
+                        });
+                        setInterval(function () {
+                            location.reload();
+                        }, 2000);
+                    }
+                },
+            });
+        }
+    });
+
+    })
 	$(document).on("click", "#create_event", function () {
 		$("#addEventModal").modal("show");
 	});

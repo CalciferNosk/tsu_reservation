@@ -23,7 +23,9 @@
           <p>
             <?= $value->Description ?>
           </p>
-          
+          <?php if(!empty($value->EventId)): ?>
+          Reservation <a target="_blank" href="<?= base_url() ?>view-event/<?= $value->EventId ?> ">event link here</a>
+          <?php endif; ?>
         </div>
         <?php if(!empty($value->ContentImage)): ?>
         <div class="bg-image hover-overlay shadow-1-strong ripple rounded-5 mb-4" data-mdb-ripple-color="light">

@@ -26,29 +26,98 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
         .sacramento-regular {
             font-size: 30px !important;
         }
+
+        #qr_div {
+            width: 100%;
+            margin: auto;
+        }
+    }
+
+    #qr_div {
+        width: 80%;
+        margin: auto;
     }
 </style>
 
 <body>
-
     <div class="container">
-    <a href="<?= base_url() ?>"><i class="fas fa-home" style="font-size: 15px;"></i></a>
+        <a href="<?= base_url() ?>"><i class="fas fa-home" style="font-size: 15px;"></i></a>
         <div class="card m-3 p-2">
             <div class="card-header">
                 <span><b><?= $event->EventName ?></b></span>
+
                 <span style="float: right;">
+                    <?php if (_getStaffEvent($_SESSION['username'], $event->EventId)):  ?>
+                        <select name="time" id="time" class="form-group">
+                            <option value="IN">IN</option>
+                            <option value="OUT">OUT</option>
+                        </select>
+                    <?php endif ?>
                     <?php if (!empty(_checkUserEvent($_SESSION['username'], $event->EventId))):
-                        $token = strtoupper(hash ( "sha256", $_SESSION['username'].date("Y-m-d") ))
-                        ?>
-                        <i class="fas fa-qrcode" id="generate"></i>
-                    <?php else: 
-                        ?>
+                        $token = strtoupper(hash("sha256", $_SESSION['username'] . date("Y-m-d")))
+                    ?>
+                        <div class="btn-group shadow-0 mb-2">
+                            <button
+                                class="btn btn-secondary dropdown-toggle"
+                                type="button"
+                                id="dropdownMenuButton"
+                                data-mdb-dropdown-init
+                                data-mdb-ripple-init
+                                aria-expanded="false">
+                                <i class="fas fa-qrcode"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a target="_blank" class="dropdown-item" href="<?= BASE_URL_SSL ?>/scan-qr/<?= $event->EventId ?>"><i class="fa-regular fa-square"></i>Scan QR</a></li>
+                                <?php if (_getStaffEvent($_SESSION['username'], $event->EventId)):  ?>
+                                    <li><a class="dropdown-item" href="#" id="organizer_qr"> <i class="fas fa-qrcode"></i> Staff QR</a></li>
+                                <?php else: ?>
+                                    <li><a class="dropdown-item" href="#" id="generate"> <i class="fas fa-qrcode"></i> Generate QR</a></li>
+                                <?php endif ?>
+                            </ul>
+                        </div>
+                    <?php else:
+                    ?>
                         <i class="fas fa-calendar-check" style="color:green"></i>
                     <?php endif; ?>
                 </span>
             </div>
             <div class="body">
-
+                <table>
+                    <tr>
+                        <td><b>Event Name</b></td>
+                        <td>: <?= $event->EventName ?></td>
+                    </tr>
+                    <tr>
+                        <td><b>Start</b></td>
+                        <td>: <?= date('M j, Y hA', strtotime($event->EventStart)) ?></td>
+                    </tr>
+                    <tr>
+                        <td><b>End</b></td>
+                        <td>: <?= date('M j, Y hA', strtotime($event->EventEnd)) ?></td>
+                    </tr>
+                    <tr>
+                        <td><b>Location</b></td>
+                        <td>: <?= $event->EventLocationId ?></td>
+                    </tr>
+                    <tr>
+                        <td><b>Organizer</b></td>
+                        <td>: <?= $event->EventOrganizer ?></td>
+                    </tr>
+                    <tr>
+                        <td><b>Description</b></td>
+                        <td>: <?= $event->Description ?></td>
+                    </tr>
+                </table>
+                <div id="<?= $event->EventId ?>">
+                    <?php if(!empty(_getEventPhoto($event->EventId))):  ?>
+                        <figure>
+                            <center>
+                            <img style="width: 50%;" src="<?= base_url() ?>assets/feed_images/<?= _getEventPhoto($event->EventId) ?>" alt="">
+                            </center>
+                        </figure>
+                  
+                    <?php endif ?>
+                </div>
             </div>
         </div>
         <!-- Button trigger modal -->
@@ -67,32 +136,53 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                     <div class="modal-body">
                         <div id="qr_div"></div>
                     </div>
-                    <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" data-mdb-ripple-init>Save changes</button>
-      </div> -->
                 </div>
             </div>
         </div>
 
+         <!-- Button trigger modal -->
+         <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#qrStaff" hidden>
+
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="qrStaff" tabindex="-1" aria-labelledby="qrStaffLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrStaffLabel">Gatepass QR Code</h5>
+                <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="qr_div_staff"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
     </div>
 
-    <?= _footerLayout(['main-view']) ?>
+    <script
+        type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/8.0.0/mdb.umd.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/@bitjson/qr-code@1.0.2/dist/qr-code.js"></script>
 
     <script>
         $(document).ready(function() {
-            var base_url = "<?= base_url() ?>";
-            var username = "<?= $_SESSION['username'] ?>";
-            var token    = "<?= $token ?>";
+            const base_url = "<?= base_url() ?>";
+            const token = "<?= $token ?>";
+            const username = "<?= $_SESSION['username'] ?>";
+           
             $("#generate").click(function() {
                 $('#qrcodeModal').modal('show');
                 var event_name = "<?= $event->EventName ?>";
                 var event_id = "<?= $event->EventId ?>";
-                var username = btoa(username);
-             
-                var link = base_url + "scan-event/login/" + event_id + "/?username=" + username + '&token=' + token;
+                console.log(username);
+                var username_link = btoa(username);
+
+                var link = base_url + "scan-event/login/" + event_id + "/?username=" + username_link + '&token=' + token;
+
                 $("#qr_div").html(` <center>
                                             <p class="sacramento-regular"><b>${event_name}</b></p>
                                           
@@ -107,7 +197,31 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                 genereteQRCode(animation);
 
             })
+
+            $(document).on('click','#organizer_qr',function(){
+
+var time = $('#time').val();
+var event_name = "<?= $event->EventName ?>";
+var event_id = "<?= $event->EventId ?>";
+var username_link = btoa(username);
+var link = base_url + "qr-staff-event/"+ time+"/" + event_id + "/?username=" + username_link + '&token=' + token;
+$("#qr_div_staff").html(` <center>
+                            <p class="sacramento-regular"><b>${event_name}</b></p>
+                          
+                            <qr-code id="qr1" contents="${link}" module-color="black" position-ring-color="black" position-center-color="black" style="background-color: #fff;">
+                                <img style="width: 100%" src="<?= base_url() ?>/assets/image/tsu-logo.png" slot="icon" />
+                            </qr-code>
+                              <p class="sacramento-regular">Scan to ${time}</p>
+                        </center>`);
+var animation = 'FadeInTopDown';
+$('#qrStaff').modal('show')
+console.log(link);
+genereteQRCode(animation);
+
+})
         })
+
+       
         // source code animation
         // https://github.com/bitjson/qr-code
         function genereteQRCode(animation) {

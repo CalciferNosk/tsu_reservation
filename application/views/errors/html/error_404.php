@@ -10,11 +10,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ::selection { background-color: #E13300; color: white; }
 ::-moz-selection { background-color: #E13300; color: white; }
 
-body {
-	background-color: #fff;
-	margin: 40px;
-	font: 13px/20px normal Helvetica, Arial, sans-serif;
-	color: #4F5155;
+body,html {
+	background-image: linear-gradient(to bottom, #800000cf, #ffc6327a);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+	height: 100%;
+    /* background-color: #ffc632 !important; */
 }
 
 a {
@@ -48,6 +52,8 @@ code {
 	margin: 10px;
 	border: 1px solid #D0D0D0;
 	box-shadow: 0 0 8px #D0D0D0;
+	width: 40%;
+	background-color: #f9f9f9 !important;
 }
 
 p {
@@ -55,11 +61,15 @@ p {
 }
 </style>
 </head>
+
 <body>
+<center>
 	<div id="container">
 		<h1><?php echo $heading; ?></h1>
 		<?php echo $message; ?>
 		go back <a href="<?= BASE_URL?>">home</a>
+		
 	</div>
+	</center>
 </body>
 </html>

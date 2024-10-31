@@ -69,7 +69,8 @@ class MainController extends CI_Controller
 			'GenderId' => isset($_POST['gender']) ? $_POST['gender'] : '',
 			'CourseId' => isset($_POST['course']) ? $_POST['course'] : '',
 			'UpdatedBy' => $username,
-			'UpdatedDate' => date('Y-m-d H:i:s')
+			'UpdatedDate' => date('Y-m-d H:i:s'),
+			'Role'				=> 5
 		];
 
 		$insert_result = $this->main_m->insertUser($data_store,$_SESSION['email']);

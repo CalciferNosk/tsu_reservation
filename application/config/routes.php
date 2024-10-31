@@ -65,10 +65,26 @@ $route['add-event'] = 'EventController/addEvent';
 #event module
 $route['view-event/(:num)'] = 'EventController/viewEvent/$1';
 $route['get-all-user'] = 'EventController/getAllUser';
+$route['scan-qr/(:num)']        = 'EventController/scanQr/$1';
+$route['scan-qr-staff/(:num)']        = 'EventController/scanQrStaff/$1';
+$route['scan-event/login/(:num)'] = 'EventController/timeInStudentEvent/$1';
+$route['qr-staff-event/(:any)/(:num)'] = 'EventController/qrStaffEvent/$1/$2';
 
-
+#redirect
+$route['success-time-in'] = 'EventController/successTimeIn';
+$route['invalid-link']  = 'EventController/invalidLink';
 $route['logout'] = 'logoutController/logout';
 
 
+
+$route['test'] = 'TesterController/dump';
+
+#admin 
+$route['admin/login'] = 'AdminController/login';
+$route['admin/auth']    = 'AdminController/auth';
+$route['admin/dashboard'] = 'AdminController/dashboard';
+
+
+$route['reset/lock'] = 'AdminController/resetLock';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

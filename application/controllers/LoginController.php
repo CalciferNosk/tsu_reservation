@@ -92,7 +92,7 @@ class LoginController extends CI_Controller {
     }
 
 
-	private function startSession($email,$pass,$username = null,$role){
+	private function startSession($email,$pass,$username = null,$role = 6){
 		$_SESSION['email'] = $email;
 		$_SESSION['password'] = $pass;
 		$_SESSION['username'] = empty($username) ? $email : $username;
