@@ -243,7 +243,27 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 border-line-left"></div>
+                    <div class="col-md-3 border-line-left">
+                    <div class="card m-3 p-2">
+                            <center>
+                                <h6>EVENT LOG</h6>
+                            </center>
+                            <hr>
+                            <div id="home_event_list_join">
+                                <ol class="list-group list-group-light list-group-numbered">
+                                    <?php foreach ($my_event as $key => $value): ?>
+                                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                                            <div class="ms-2 me-auto">
+                                                <div class="fw-bold"><?= $value->EventName ?></div>
+                                                <p><?= date('M j, Y ', strtotime($value->EventStart)) ?></p>
+                                            </div>
+                                            <a target="_blank" href="<?= base_url() ?>view-event/<?= $value->EventId ?>"><span class="badge badge-primary rounded-pill">Time in</span></a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="content_div mt-2" id="event_content" style="display: none;">
@@ -350,7 +370,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                     <i class="fas fa-edit event-edit event-action" data-mdb-ripple-init
                                                         data-mdb-tooltip-init
                                                         data-mdb-html="true"
-                                                        title="Edit"></i>
+                                                        title="Edit" data-rowdata="<?= base64_encode(json_encode($value)) ?>"></i>
                                                     <i class="fas fa-trash event-delete event-action" data-mdb-ripple-init
                                                         data-mdb-tooltip-init
                                                         data-mdb-html="true"
@@ -423,18 +443,94 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                             </button>
                             <!-- Modal -->
                             <div class="modal fade" id="editEventModal" tabindex="-1" aria-labelledby="editEventModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-xl">
                                     <div class="modal-content">
-                                        <div class="modal-header">
+                                        <div class="modal-header" style="background-color: #800000;color: yellow">
                                             <h5 class="modal-title" id="editEventModalLabel">Edit Event</h5>
                                             <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
                                         </div>
+                                        <form action="#" method="post" id="editEventForm" enctype="multipart/form-data">
                                         <div class="modal-body">
-                                            edit fields
-                                        </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-3">
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="text" id="edit-event-name" name="edit-event-name" class="form-control" value="" required/>
+                                                            <label class="form-label" for="edit-event-name">EVENT NAME</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <div class="form-group">
+                                                            <label>Location</label>
+                                                            <select class="mdb-select form-select" name="edit-event-location" id="edit-event-location" required>
+                                                                <option value="" disabled selected>Choose Location</option>
+                                                                <?php foreach (_getAllLocation() as $key => $value): ?>
+                                                                    <option value="<?= $value->id ?>"><?= $value->LocationName ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-4 mb-3">
+
+                                                        <div class="form-group">
+                                                            <label> Organizer</label>
+                                                            <select class="mdb-select form-select" name="edit-event-organizer" id="edit-event-organizer" required>
+                                                                <option value="" disabled selected>Choose Organizer</option>
+                                                                <?php foreach (_getAllUsers() as $key => $user): ?>
+                                                                    <option value="<?= $user->Username ?>"><?= strtoupper($user->Lname . ' ' . $user->Fname . ', ' . (empty($user->Mname) ? '_' : substr($user->Mname, 0, 1) . '.')) ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-4 mb-3">
+                                                        <label>EVENT SLOT</label>
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="number" id="edit-event-slot" name="edit-event-slot" class="form-control" value="" required/>
+                                                            <label class="form-label" for="edit-event-slot">EVENT SLOT</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="date" id="edit-event-start" name="edit-event-start" class="form-control datepicker date-input" required/>
+                                                            <label class="form-label" for="edit-event-start">EVENT START</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="date" id="edit-event-end" name="edit-event-end" class="form-control datepicker date-input" required/>
+                                                            <label class="form-label" for="edit-event-end">EVENT END</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="date" id="edit-event-reservation_start" name="edit-event-reservation_start" class="form-control datepicker date-input" required/>
+                                                            <label class="form-label" for="edit-event-reservation_start">RESERVATION START</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="date" id="edit-event-reservation_end" name="edit-event-reservation_end" class="form-control datepicker date-input" required/>
+                                                            <label class="form-label" for="edit-event-reservation_end">RESERVATION END</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mb-3">
+                                                        <Label>Description</Label>
+                                                        <textarea class="summernote" id="edit-event-description" name="edit-event-description" required></textarea>
+                                                    </div>
+                                                    <input type="hidden" name="edit-event-id" id="edit-event-id">
+                                                    <hr>
+                                                 
+                                                </div>
+                                            </div>
+                                  
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" data-mdb-ripple-init>Save changes</button>
+                                            <button type="submit" class="btn btn-primary" id="save_update" data-mdb-ripple-init>Save Update</button>
                                         </div>
+                                    </form>
                                     </div>
                                 </div>
                             </div>

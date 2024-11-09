@@ -85,5 +85,11 @@ defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automat
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 
+// defined('BASE_URL') ?  null : define('BASE_URL', 'http://192.168.100.217/tsu_reservation');
+// defined('BASE_URL_SSL') ?  null : define('BASE_URL_SSL', 'https://192.168.100.217/tsu_reservation');
+
+
+
 defined('BASE_URL') ?  null : define('BASE_URL', 'http://localhost/tsu_reservation');
-defined('IMG_LOGO') ?  null : define('IMG_LOGO', './assets/image/tsu-logo.png');
+defined('BASE_URL_SSL') ?  null : define('BASE_URL_SSL', 'https://localhost/tsu_reservation');
+defined('IMG_LOGO') ?  null : define('IMG_LOGO', BASE_URL.'/assets/image/tsu-logo.png');

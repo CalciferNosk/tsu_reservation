@@ -77,9 +77,9 @@ if( ! function_exists('_getUserProfile')){
         $CI =& get_instance();
        $CI->load->model('MainModel','main_m');
        
-       $fullname = $CI->main_m->getUserFullName($username)->ProfilePhoto;
+       $fullname = $CI->main_m->getUserFullName($username);
 
-        return $fullname;
+        return !empty($fullname) ? $fullname->ProfilePhoto : 'default_user.jpg';
     }
 }
 if( ! function_exists('_getUserRole')){
@@ -88,7 +88,7 @@ if( ! function_exists('_getUserRole')){
         $CI =& get_instance();
         
        $CI->load->model('MainModel','main_m');
-       
+       if(empty($username)) return '--';
        $fullname = $CI->main_m->getUserFullName($username)->Role;
 
         return $fullname;
@@ -183,7 +183,7 @@ if( ! function_exists('_getWorkgroupAccess')){
         $role_id = $_SESSION['role'];
        $check_access = $CI->main_m->getWorkgroupAccess($role_id)[0]->$access_name;
 
-       return (int)$check_access;
+       return  (int)$check_access;
     }
 }
 if( ! function_exists('_getAllLocation')){
@@ -208,6 +208,42 @@ if( ! function_exists('_checkUserEvent')){
        return $check;
     }
 }
+
+if( ! function_exists('_checkUserDatByUsername')){
+
+    function _checkUserDatByUsername($username,$column){
+      
+        $CI =& get_instance();
+       $CI->load->model('EventModel','event_m');
+       $check = $CI->event_m->checkUserDatByUsername($username,$column);
+
+       return $check;
+    }
+}
+
+
+if( ! function_exists('_getStaffEvent')){
+    function _getStaffEvent($username,$event_id){
+      
+        $CI =& get_instance();
+       $CI->load->model('EventModel','event_m');
+       $check = $CI->event_m->getEventStaff($username,$event_id);
+
+       return $check;
+    }
+}
+
+if( ! function_exists('_getEventPhoto')){
+    function _getEventPhoto($event_id){
+      
+        $CI =& get_instance();
+       $CI->load->model('EventModel','event_m');
+       $check = $CI->event_m->getEventPhoto($event_id);
+
+       return $check;
+    }
+}
+
 
 
 ?>
