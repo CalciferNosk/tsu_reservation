@@ -212,4 +212,35 @@ class MainController extends CI_Controller
 		$data['event_data'] = json_encode($event);
 		$this->load->view('HomeModule/CalendarView',$data);
 	}
+
+	public function createConcern(){
+
+
+		$data = [
+			'Title' =>  _getConcernCategoryById($_POST['category']).' | '. $_SESSION['username'],
+			'Category' => $_POST['category'],
+			'Description' => $_POST['description'],
+			'Requestor' => $_SESSION['username'],
+			'CreatedBy' => $_SESSION['username']
+		];
+
+		$result = $this->main_m->createConcern($data);
+
+		echo json_encode($result);
+	}
+
+	public function getAllMyConcerns(){
+
+		$data['concern_list'] = $this->main_m->getAllMyConcerns();
+		echo json_encode($data);
+	}
+	public function viewConcern($id){
+		
+		$data['result'] = $this->main_m->getAllMyConcerns($id);
+	
+		$this->load->view('MainModule/ViewConcernView', $data);
+
+		
+
+	}
 }

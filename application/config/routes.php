@@ -84,6 +84,11 @@ $route['update-details']    = 'MainController/updateDetails';
 $route['calendar'] = 'MainController/getCalendar';
 $route['test'] = 'TesterController/dump';
 
+#contact us 
+$route['create-concern'] = 'MainController/createConcern';
+$route['get-all-my-concerns'] = 'MainController/getAllMyConcerns';
+$route['view-concern/(:num)'] = 'MainController/viewConcern/$1';
+
 #admin 
 $route['admin/login'] = 'AdminController/login';
 $route['admin/auth']    = 'AdminController/auth';

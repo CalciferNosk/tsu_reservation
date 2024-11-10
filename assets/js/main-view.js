@@ -1,4 +1,9 @@
 $(document).ready(function () {
+
+	getAllMyConcerns(); // load concerns
+
+
+
 	$(document).on("click", ".tab-link", function () {
 		var content = $(this).data("content");
 		$(".tab-link").removeClass("active_tab");
@@ -7,6 +12,35 @@ $(document).ready(function () {
 		sessionStorage.setItem("nav"+username, content);
 		$("#" + content + "_content").show();
 	});
+	$(document).on('submit', '#newContactForm', function(e) {
+		e.preventDefault();
+		var form_data = new FormData(this);
+		var data = form_data;
+		$.ajax({
+			url: base_url + 'create-concern',
+			type: 'POST',
+			data: data,
+			contentType: false,
+			cache: false,
+			processData: false,
+			dataType: "json",
+			success: function(response) {
+				console.log(response);
+				if(response == true){
+					toastify("Successfully saved","green");
+					$('#ContactModal').modal('hide');
+					setTimeout(function () {
+						location.reload();
+					}, 2000);
+				}
+				else{
+					toastify("Something went wrong,Please try again");
+				}
+
+			}
+		})
+
+	})
 
 	$(document).on("submit", "#newUserForm", function (e) {
 		e.preventDefault();
@@ -87,6 +121,28 @@ $(document).ready(function () {
 			},
 			onClick: function () {}, // Callback after click
 		}).showToast();
+	}
+
+	function getAllMyConcerns() {
+		$.ajax({
+			url: base_url + "get-all-my-concerns",
+			type: "POST",
+			dataType: "json",
+			success: function (response) {
+				var body_tr = '';
+			$.each(response.concern_list, function (k, v) {
+				// var id = v.id.padStart(5, '0');
+					body_tr += `<tr>
+									<td><a target="_blank" href="${base_url}view-concern/${v.id}">${v.id.padStart(5, '0')}</a></td>
+									<td>${v.Title}</td>
+									<td>${v.Status}</td>
+									<td>${v.CreatedDate}</td>
+								</tr>`;
+			})
+
+			$('#contactTable').html(body_tr);
+			},
+		});
 	}
 });
 

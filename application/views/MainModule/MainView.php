@@ -53,10 +53,11 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
             color: #800000 !important;
         }
     }
+
     .rounded-circle {
-    border-radius: 50%;
-    object-fit: cover;
-}
+        border-radius: 50%;
+        object-fit: cover;
+    }
 </style>
 
 <body style="background-color: #fbfbef;">
@@ -86,16 +87,16 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         <a class="nav-link tab-link" data-content="calendar" id="nav_calendar" href="<?= base_url() ?>calendar">Calendar</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link tab-link" data-content="contact" id="nav_contact" s href="#">Contact</a>
+                        <a class="nav-link tab-link" data-content="contact" id="nav_contact" s href="#">Contact Us</a>
                     </li>
                 </ul>
 
                 <!-- Dropdown -->
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
-                       <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                           <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle shadow-sm" style="width: 45px; height: 45px" alt="Avatar" loading="lazy" />
-                       </a>
+                        <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                            <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle shadow-sm" style="width: 45px; height: 45px" alt="Avatar" loading="lazy" />
+                        </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#"><b><?= strtoupper($this->session->userdata('username')) ?></b></a></li>
                             <li><a class="dropdown-item" target="_blank" href="<?= base_url() ?>account-setting">Account Settings</a></li>
@@ -188,7 +189,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                     <div class="col-md-3 border-line-right">
                         <div class="card m-3 p-2 ">
                             <div class="d-flex">
-                                <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>"class="rounded-circle shadow-sm" style="width: 45px; height: 45px"  alt="Avatar" loading="lazy" />
+                                <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle shadow-sm" style="width: 45px; height: 45px" alt="Avatar" loading="lazy" />
                                 <div class="d-flex align-items-center w-100 ps-3">
                                     <div class="w-100">
                                         <span class="d-block mb-1"><?= empty(_getUserFullName($_SESSION['username'])) ? 'default_user.jpg' : _getUserFullName($_SESSION['username']) ?></span ?>
@@ -199,7 +200,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         </div>
                         <div class="card m-3 p-2">
                             <center>
-                                <i class="bookmark-icon" >
+                                <i class="bookmark-icon">
                                     <svg id="bookmark-i" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                                     </svg>
@@ -227,7 +228,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         <div class="row">
                             <div class="card-body border-bottom pb-2 shadow-lg m-3 p-5" style="border-radius: 14px;background-color: white">
                                 <div class="d-flex">
-                                    <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle "class="rounded-circle shadow-sm" style="width: 45px; height: 45px"  alt="Avatar" loading="lazy" />
+                                    <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle " class="rounded-circle shadow-sm" style="width: 45px; height: 45px" alt="Avatar" loading="lazy" />
                                     <div class="d-flex align-items-center w-100 ps-3">
                                         <div class="w-100">
                                             <div data-mdb-input-init class="form-outline w-100">
@@ -592,9 +593,85 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                 <?php endif; ?>
             </div>
             <div class="content_div" id="calendar_content" style="display: none;">
-                  <center><a href="<?= base_url('calendar') ?>">Got to Calendar</a></center>  
+                <center><a href="<?= base_url('calendar') ?>">Got to Calendar</a></center>
+            </div>
+
+            <div class="content_div" id="contact_content" style="display: none;">
+                <div class="container-fluid">
+                    <div class="card p-2 m-2">
+                        <h3>Contact Us </h3>
+                        <p>Create ticker for your concern</p>
+
+                        <div class="row m-3">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div>
+                                        <button type="button" class="btn btn-primary" id="addNewContact">Create New +</button>
+                                    </div>
+
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Title</th>
+                                                <th>Status</th>
+                                                <th>Created Date </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="contactTable">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal fade" id="ContactModal" tabindex="-1" aria-labelledby="ContactModalLabel" aria-hidden="true">
+                    <div class="modal-dialog  modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="ContactModalLabel">Create Concern</h5>
+                                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <!-- <form action="#" method="post" id="newUserForm" enctype="multipart/form-data"> -->
+                            <form action="" method="post" id="newContactForm">
+                                <div class="modal-body">
+                                    <div class="form-outline" data-mdb-input-init>
+                                        <input name="request_date" type="text" id="form8Example1" class="form-control" value="<?= date('Y-m-d') ?>" readonly />
+                                        <label class="form-label" for="form8Example1">request date</label>
+                                    </div>
+                                    <div class="form-outline" data-mdb-input-init>
+                                        <label>Category</label>
+                                        <select name="category" data-mdb-select-init class="form-select" id="inlineFormSelectPref">
+                                            <option value="1">Event</option>
+                                            <option value="2">System</option>
+                                            <option value="3">Profile</option>
+                                            <option value="4">Workgroup/Access</option>
+                                            <option value="5">Update Profile</option>
+                                            <option value="6">Others</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-outline" data-mdb-input-init>
+                                        <label for=""> Description</label>
+                                        <textarea name="description" class="summernote" id=""></textarea>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer" id="reserve_event_slot_div">
+                                    <!-- <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button> -->
+                                    <button type="sumbit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                            <!-- </form> -->
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
+
     <?php endif; ?>
     <script>
         var new_user = `<?= empty($user_data->Username) ? 1 : 0 ?>`;
@@ -605,19 +682,22 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
 
     <script>
         $(document).ready(function() {
-
+            $(document).on('click', '#addNewContact', function() {
+                $('#ContactModal').modal('show');
+            })
             if (new_user == 1) {
                 $('#newUserModal').modal('show');
             }
+          
 
             var content = sessionStorage.getItem("nav" + username);
             if (content !== null) {
                 $(".content_div").hide();
                 $('.tab-link').removeClass('active_tab');
                 $('#nav_' + content).addClass('active_tab');
-              
+
                 $("#" + content + "_content").show();
-                if(content == 'calendar'){
+                if (content == 'calendar') {
                     $('#nav_home').trigger('click');
                 }
             } else {
@@ -674,21 +754,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
         });
     </script>
 
-<script src="
-https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js
-"></script>
 
-<script>
-
-document.addEventListener('DOMContentLoaded', function() {
-  const calendarEl = document.getElementById('calendar')
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth'
-  })
-  calendar.render()
-})
-
-</script>
 </body>
 
 </html>

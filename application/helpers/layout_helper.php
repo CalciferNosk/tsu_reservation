@@ -313,14 +313,31 @@ if( ! function_exists('_getGenderNameById')){
     }
 }
 
-if( ! function_exists('_getCalendar')){
+if( ! function_exists('_getConcernCategory')){
 
-    function _getCalendar()
+    function _getConcernCategory()
     {
 
-     $html =   $this->load->view('HomeModule/CalendarView');
+     $CI =& get_instance();
+       $CI->load->model('MainModel','main_m');
+       $concern = $CI->main_m->getConcernCategory();
 
-     return $html;
+       return  $concern;
+    }
+
+
+}
+
+if( ! function_exists('_getConcernCategoryById')){
+
+    function _getConcernCategoryById($cat_id)
+    {
+
+        $CI =& get_instance();
+        $CI->load->model('MainModel','main_m');
+        $concern = $CI->main_m->getConcernCategoryById($cat_id);
+ 
+        return  $concern;
      
     }
 

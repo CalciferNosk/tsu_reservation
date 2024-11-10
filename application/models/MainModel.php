@@ -14,6 +14,9 @@ class MainModel extends CI_Model
     protected $tbl_workgroup = "tbl_workgroup";
     protected $tbl_workgruop_access = "tbl_workgruop_access";
     protected $tbl_event_bookmark = "tbl_event_bookmark";
+    protected $tbl_concern_data = "tbl_concern_data";
+    protected $tbl_concern_category = "tbl_concern_category";
+    protected $tbl_concern_status = "tbl_concern_status";
     public function __construct()
     {   
         $this->max_concat = $this->db->query("SET SESSION group_concat_max_len = 18446744073709551615;");
@@ -209,4 +212,37 @@ class MainModel extends CI_Model
     $sql = "UPDATE {$this->tbl_user} SET Lname = '{$data['Lname']}',  Mname = '{$data['Mname']}', Fname = '{$data['Fname']}' WHERE Username = '{$_SESSION['username']}'";
     return $this->db->query($sql);
   }
+  public function createConcern($data){
+
+   $result = $this->db->insert($this->tbl_concern_data,$data);
+
+   return $result;
+  }
+
+  public function getConcernCategoryById($cat){
+
+    $sql = "SELECT * FROM {$this->tbl_concern_category} WHERE id = '{$cat}' AND DeletedTag = 0";
+    $result = $this->db->query($sql)->row()->CategoryName;
+    return $result;
+
+  }
+  public function getAllMyConcerns($id = null){
+    $where = $id == null ? '' : "AND a.id = {$id}";
+    $sql = "SELECT 
+                    a.*,
+                    s.Status,
+                    s.NextStatus,
+                    c.CategoryName
+                FROM
+                    {$this->tbl_concern_data} as a 
+                LEFT JOIN 
+                    {$this->tbl_concern_status} as s on a.CurrentStatusId = s.id
+                LEFT JOIN 
+                    {$this->tbl_concern_category} as c on a.Category = c.id
+                    WHERE a.Requestor = '{$_SESSION['username']}' {$where} AND a.DeletedTag = 0";
+
+    return $id==null ? $this->db->query($sql)->result_object() : $this->db->query($sql)->row();
+  }
+
+
 }
