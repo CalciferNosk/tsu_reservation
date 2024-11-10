@@ -67,7 +67,7 @@ _headerLayout([], 'ACCOUNT | SETTINGS')
 </style>
 </head>
 <body>
-<a href='index.html' type="button"  class="btn btn-primary">Back to Home</a>
+<a href='<?= base_url() ?>' type="button"  class="btn btn-primary">Back to Home</a>
 <br>
 <br>
   <div id='calendar-container'>
