@@ -1,7 +1,6 @@
 
 <?=
-
-_headerLayout([], 'ACCOUNT | SETTINGS')
+_headerLayout([], 'EVENT | CALENDAR')
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,7 +38,7 @@ _headerLayout([], 'ACCOUNT | SETTINGS')
 <style>
 
   html, body {
-    overflow: hidden; /* don't do scrollbars */
+    overflow: hidden;
     font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
     font-size: 14px;
   }
@@ -51,7 +50,7 @@ _headerLayout([], 'ACCOUNT | SETTINGS')
     right: 0;
     bottom: 0;
     /* margin: px; */
-    margin-top: 50px;
+    margin-top: 70px;
   }
 
   .fc-header-toolbar {
@@ -67,12 +66,59 @@ _headerLayout([], 'ACCOUNT | SETTINGS')
 </style>
 </head>
 <body>
-<a href='<?= base_url() ?>' type="button"  class="btn btn-primary">Back to Home</a>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #800000;">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand" href="#"> <img width="30" style="background-color: white;border-radius: 50%;" src="<?= IMG_LOGO ?>" alt=""></a>
+
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Collapsible Content -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <!-- Links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link tab-link  " data-content="home" id="nav_home" aria-current="page" href="<?= base_url() ?>">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link tab-link active" data-content="calendar" id="nav_calendar" href="<?= base_url() ?>calendar">Calendar</a>
+                    </li>
+                    
+                </ul>
+                <center>
+                <h2 style="color:#fec530">EVENT CALENDAR</h2></center>
+                <!-- Dropdown -->
+                <!-- <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                       <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                           <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle shadow-sm" style="width: 45px; height: 45px" alt="Avatar" loading="lazy" />
+                       </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#"><b><?= strtoupper($this->session->userdata('username')) ?></b></a></li>
+                            <li><a class="dropdown-item" target="_blank" href="<?= base_url() ?>account-setting">Account Settings</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" style="color:red" href="<?= base_url() ?>logout" id="" href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul> -->
+            </div>
+        </div>
+    </nav> 
 <br>
+
 <br>
-  <div id='calendar-container'>
+<div>
+
+     <div id='calendar-container'>
     <div id='calendar'></div>
   </div>
+</div>
+ 
 
 </body>
 </html>

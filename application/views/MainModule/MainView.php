@@ -258,12 +258,12 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                             </center>
                             <hr>
                             <div id="home_event_list_join">
-                                <ol class="list-group list-group-light list-group-numbered">
+                                <ol class="list-group list-group-light ">
                                     <?php foreach ($my_event as $key => $value): ?>
-                                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                                        <li class="list-group-item d-flex justify-content-between align-items-start" style="padding: 2px;">
                                             <div class="ms-2 me-auto">
-                                                <div class="fw-bold"><?= $value->EventName ?></div>
-                                                <p><?= date('M j, Y ', strtotime($value->EventStart)) ?></p>
+                                                <div class="fw-bold" style="font-size: 12px;"><?= $value->EventName ?></div>
+                                                <span style="font-size: 10px;"><?= date('M j, Y ', strtotime($value->EventStart)) ?></span>
                                             </div>
                                             <a target="_blank" href="<?= base_url() ?>view-event/<?= $value->EventId ?>"><span class="badge badge-primary rounded-pill">Time in</span></a>
                                         </li>

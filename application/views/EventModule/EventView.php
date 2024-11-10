@@ -1,4 +1,5 @@
 <?=
+
 _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
 ?>
 
