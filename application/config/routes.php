@@ -81,7 +81,7 @@ $route['change-password'] = 'MainController/changePassword';
 $route['update-details']    = 'MainController/updateDetails';
 
 
-
+$route['calendar'] = 'MainController/getCalendar';
 $route['test'] = 'TesterController/dump';
 
 #admin 

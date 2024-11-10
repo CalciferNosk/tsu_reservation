@@ -196,4 +196,20 @@ class MainController extends CI_Controller
 
 		 echo json_encode($result);
 	}
+
+	public function getCalendar(){
+		$data['initialDate'] = date('Y-m-d');
+		$event_list = $this->main_m->getEventList($data);
+
+		$event = [];
+		foreach ($event_list as $key => $value) {
+			array_push($event,(object)[
+				"title" => $value->EventName,
+				"start" => $value->EventStart,
+				"end" => $value->EventEnd
+			]);
+		}
+		$data['event_data'] = json_encode($event);
+		$this->load->view('HomeModule/CalendarView',$data);
+	}
 }

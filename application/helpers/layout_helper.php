@@ -313,4 +313,19 @@ if( ! function_exists('_getGenderNameById')){
     }
 }
 
+if( ! function_exists('_getCalendar')){
+
+    function _getCalendar()
+    {
+
+     $html =   $this->load->view('HomeModule/CalendarView');
+
+     return $html;
+     
+    }
+
+
+}
+
+
 ?>

@@ -6,8 +6,8 @@
         <!-- Data -->
         <div class="d-flex mb-3">
           <a href="">
-            <img src="<?= base_url() ?>assets/user_profile/<?= empty(_getUserProfile($value->PostCreatedby)) ? 'default_user.jpg' : _getUserProfile($value->PostCreatedby) ?>" class="border rounded-circle me-2"
-              alt="Avatar" style="height: 40px" />
+            <img src="<?= base_url() ?>assets/user_profile/<?= empty(_getUserProfile($value->PostCreatedby)) ? 'default_user.jpg' : _getUserProfile($value->PostCreatedby) ?>" class="rounded-circle shadow-sm" style="width: 45px; height: 45px" 
+              alt="Avatar"  />
           </a>
           <div>
             <a href="" class="text-dark mb-0">

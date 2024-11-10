@@ -83,7 +83,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         <a class="nav-link tab-link" data-content="event" id="nav_event" href="#">Event List</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link tab-link" data-content="calendar" id="nav_calendar" href="#">Calendar</a>
+                        <a class="nav-link tab-link" data-content="calendar" id="nav_calendar" href="<?= base_url() ?>calendar">Calendar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link tab-link" data-content="contact" id="nav_contact" s href="#">Contact</a>
@@ -188,8 +188,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                     <div class="col-md-3 border-line-right">
                         <div class="card m-3 p-2 ">
                             <div class="d-flex">
-                                <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle"
-                                    height="50" alt="Avatar" loading="lazy" />
+                                <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>"class="rounded-circle shadow-sm" style="width: 45px; height: 45px"  alt="Avatar" loading="lazy" />
                                 <div class="d-flex align-items-center w-100 ps-3">
                                     <div class="w-100">
                                         <span class="d-block mb-1"><?= empty(_getUserFullName($_SESSION['username'])) ? 'default_user.jpg' : _getUserFullName($_SESSION['username']) ?></span ?>
@@ -228,8 +227,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         <div class="row">
                             <div class="card-body border-bottom pb-2 shadow-lg m-3 p-5" style="border-radius: 14px;background-color: white">
                                 <div class="d-flex">
-                                    <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle "
-                                        height="50" alt="Avatar" loading="lazy" />
+                                    <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle "class="rounded-circle shadow-sm" style="width: 45px; height: 45px"  alt="Avatar" loading="lazy" />
                                     <div class="d-flex align-items-center w-100 ps-3">
                                         <div class="w-100">
                                             <div data-mdb-input-init class="form-outline w-100">
@@ -594,7 +592,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                 <?php endif; ?>
             </div>
             <div class="content_div" id="calendar_content" style="display: none;">
-                <div id="calendar"></div>
+                  <center><a href="<?= base_url('calendar') ?>">Got to Calendar</a></center>  
             </div>
         </div>
     <?php endif; ?>
@@ -617,8 +615,11 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                 $(".content_div").hide();
                 $('.tab-link').removeClass('active_tab');
                 $('#nav_' + content).addClass('active_tab');
-
+              
                 $("#" + content + "_content").show();
+                if(content == 'calendar'){
+                    $('#nav_home').trigger('click');
+                }
             } else {
                 console.log('Content does not exist in sessionStorage');
             }
@@ -672,6 +673,22 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
 
         });
     </script>
+
+<script src="
+https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js
+"></script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  const calendarEl = document.getElementById('calendar')
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth'
+  })
+  calendar.render()
+})
+
+</script>
 </body>
 
 </html>
