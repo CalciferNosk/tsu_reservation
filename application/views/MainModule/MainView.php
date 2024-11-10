@@ -638,13 +638,13 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                             <!-- <form action="#" method="post" id="newUserForm" enctype="multipart/form-data"> -->
                             <form action="" method="post" id="newContactForm">
                                 <div class="modal-body">
-                                    <div class="form-outline" data-mdb-input-init>
-                                        <input name="request_date" type="text" id="form8Example1" class="form-control" value="<?= date('Y-m-d') ?>" readonly />
-                                        <label class="form-label" for="form8Example1">request date</label>
+                                    <div class="form-outline" >
+                                        <input name="request_date" type="text" id="date" class="form-control" value="<?= date('Y-m-d') ?>" readonly />
+                                        <label class="form-label" for="date">request date</label>
                                     </div>
-                                    <div class="form-outline" data-mdb-input-init>
+                                    <div>
                                         <label>Category</label>
-                                        <select name="category" data-mdb-select-init class="form-select" id="inlineFormSelectPref">
+                                        <select name="category" class="form-select" id="cat">
                                             <option value="1">Event</option>
                                             <option value="2">System</option>
                                             <option value="3">Profile</option>
@@ -653,7 +653,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                             <option value="6">Others</option>
                                         </select>
                                     </div>
-                                    <div class="form-outline" data-mdb-input-init>
+                                    <div class="form-outline" >
                                         <label for=""> Description</label>
                                         <textarea name="description" class="summernote" id=""></textarea>
                                     </div>
