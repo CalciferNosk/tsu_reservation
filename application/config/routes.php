@@ -76,6 +76,9 @@ $route['invalid-link']  = 'EventController/invalidLink';
 $route['logout'] = 'logoutController/logout';
 
 $route['account-setting'] = 'MainController/accountSetting';
+$route['save-profile'] = 'MainController/saveProfile';
+$route['change-password'] = 'MainController/changePassword';
+$route['update-details']    = 'MainController/updateDetails';
 
 
 

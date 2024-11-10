@@ -140,5 +140,60 @@ class MainController extends CI_Controller
 		$this->load->view('MainModule/AccountSettingView',$data);
 	}
 
+	public function saveProfile()
+	{
+		
+		// Define the upload directory
+		$upload_dir = './assets/user_profile/';
+		$result =0;
+		// Check if the upload directory exists, if not create it
+		if (!is_dir($upload_dir)) {
+			mkdir($upload_dir, 0777, true);
+		}
 
+		// Check if the file was uploaded
+		if ($_FILES['profile']['error'] == 0) {
+			// Get the file name and extension
+			// $file_name = $_FILES['profile']['name'];
+			$file_name = $_SESSION['username'] . '_' . date('Ymd') . '.' . pathinfo($_FILES['profile']['name'], PATHINFO_EXTENSION);
+			$file_ext = pathinfo($file_name, PATHINFO_EXTENSION);
+
+			// Check if the file is allowed (e.g. only images)
+			$allowed_ext = array('jpg', 'jpeg', 'png', 'gif','jfif');
+			if (in_array($file_ext, $allowed_ext)) {
+				// Move the uploaded file to the upload directory
+				$new_file_name = $upload_dir . $file_name;
+				if (move_uploaded_file($_FILES['profile']['tmp_name'], $new_file_name)) {
+					$data['error'] = "File uploaded successfully!";
+					$data['result'] =$this->main_m->updateProfile($file_name);
+				} else {
+					$data['error']  =  "Error uploading file.";
+				}
+			} else {
+				$data['error'] =  "Only images are allowed.";
+			}
+		} else {
+			$data['error'] =  "Error uploading file.";
+		}
+		echo json_encode($data);
+	}
+
+	public function changePassword(){
+		$password = $this->main_m->getUsersDataById($_SESSION['username'])->Password;
+
+		if(password_verify($_POST['current'], $password)){
+			
+			$result = $this->main_m->updatePassword($_POST['newpassword']);
+			echo json_encode(1);
+		}
+		else{
+			echo json_encode(0);
+		}
+	}
+	public function updateDetails(){
+		
+		 $result = $this->main_m->updateDetails($_POST);
+
+		 echo json_encode($result);
+	}
 }

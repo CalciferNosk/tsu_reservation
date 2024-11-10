@@ -193,4 +193,20 @@ class MainModel extends CI_Model
     $sql = "SELECT * FROM {$this->tbl_gender} WHERE id = {$id}";
     return $this->db->query($sql)->row();
   }
+  public function updateProfile($file_name){
+
+    $sql = "UPDATE {$this->tbl_user} SET ProfilePhoto = '{$file_name}' WHERE Username = '{$_SESSION['username']}'";
+    return $this->db->query($sql);
+  }
+
+  public function updatePassword($new_password){
+    $new_password = password_hash($new_password, PASSWORD_DEFAULT);
+    $sql = "UPDATE {$this->tbl_user} SET Password = '{$new_password}' WHERE Username = '{$_SESSION['username']}'";
+    return $this->db->query($sql);
+  }
+  public function updateDetails($data){
+
+    $sql = "UPDATE {$this->tbl_user} SET Lname = '{$data['Lname']}',  Mname = '{$data['Mname']}', Fname = '{$data['Fname']}' WHERE Username = '{$_SESSION['username']}'";
+    return $this->db->query($sql);
+  }
 }
