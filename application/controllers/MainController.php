@@ -133,5 +133,12 @@ class MainController extends CI_Controller
 		echo json_encode($result);
 	}
 
+	public function accountSetting(){
+		$data['user_data'] = $this->main_m->getUsersDataById($_SESSION['username']);
+
+		// var_dump('<pre>',$data);die;
+		$this->load->view('MainModule/AccountSettingView',$data);
+	}
+
 
 }

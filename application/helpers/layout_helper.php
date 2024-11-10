@@ -136,33 +136,34 @@ if (! function_exists('_getHrAgo')) {
    }
 }
 
-if( ! function_exists('_getDateStatus')){
+if (! function_exists('_getDateStatus')) {
 
-    function _getDateStatus($date){
-       $dateToCheck = new DateTime($date);
-       $currentDate = new DateTime();
-       
-       $diff = $currentDate->diff($dateToCheck);
-       
-       if ($diff->invert === 1) {
-           return 1;
-       } else {
-           return 0;
-       }
+    function _getDateStatus($date)
+    {
+        $dateToCheck = new DateTime($date);
+        $currentDate = new DateTime();
 
+        $diff = $currentDate->diff($dateToCheck);
+
+        if ($diff->invert === 1) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
 
-if( ! function_exists('_getStatusBadge')){
+if (! function_exists('_getStatusBadge')) {
 
-    function _getStatusBadge($value){
-      
-        $badge= '<span class="badge rounded-pill badge-primary">Upcoming</span>';
-        if(_getDateStatus($value->EventStart) == 1){
-            $badge= '<span class="badge rounded-pill badge-success">Ongoing</span>';
+    function _getStatusBadge($value)
+    {
+
+        $badge = '<span class="badge rounded-pill badge-primary">Upcoming</span>';
+        if (_getDateStatus($value->EventStart) == 1) {
+            $badge = '<span class="badge rounded-pill badge-success">Ongoing</span>';
         }
-        if(_getDateStatus($value->EventEnd) == 1){
-            $badge= '<span class="badge rounded-pill badge-light">Ended</span>';
+        if (_getDateStatus($value->EventEnd) == 1) {
+            $badge = '<span class="badge rounded-pill badge-light">Ended</span>';
 
         }
         if($value->DeletedTag == 1){
@@ -183,9 +184,13 @@ if( ! function_exists('_getWorkgroupAccess')){
         $role_id = $_SESSION['role'];
        $check_access = $CI->main_m->getWorkgroupAccess($role_id)[0]->$access_name;
 
+      
        return  (int)$check_access;
     }
 }
+
+
+
 if( ! function_exists('_getAllLocation')){
 
     function _getAllLocation(){
@@ -244,6 +249,68 @@ if( ! function_exists('_getEventPhoto')){
     }
 }
 
+if( ! function_exists('_checkBookmarkByEventId')){
 
+    function _checkBookmarkByEventId($event_id,$isDeleted = 0){
+      
+        $CI =& get_instance();
+       $CI->load->model('MainModel','main_m');
+        $role_id = $_SESSION['role'];
+       $bool = $CI->main_m->checkBookmarkByEventId($event_id,$_SESSION['username'],$isDeleted);
+
+       return  (int)$bool;
+    }
+}
+if( ! function_exists('_getWorkgroupAccessbyRole')){
+
+    function _getWorkgroupAccessbyRole($role_id){
+      
+        $CI =& get_instance();
+       $CI->load->model('MainModel','main_m');
+       $check_access = $CI->main_m->getWorkgroupAccessbyRole($role_id);
+        $name = [];
+        if($check_access->CreateEvent == 1){
+           array_push($name,'CreateEvent') ;
+        }
+        if($check_access->Comment == 1){
+            array_push($name,'Comment') ;
+        }
+        if($check_access->ViewEvent == 1){
+            array_push($name,'ViewEvent') ;
+        }
+        if($check_access->ScanQR == 1){
+            array_push($name,'ScanQR') ;
+        }
+        if($check_access->GenerateQR == 1){
+            array_push($name,'GenerateQR') ;
+        }
+
+       return  implode(" | ", $name);
+    }
+}
+
+if( ! function_exists('_getGenderNameById')){
+
+    function _getGenderNameById($gender_id)
+    {
+
+      switch ($gender_id) {
+        case 1:
+            $gender = "Male";
+            break;
+        case 2:
+            $gender = "Female";
+            break;
+        case 3:
+            $gender = "Nonbinary and/or Intersex.";
+            break;
+        default:
+            $gender = "Unknown";
+            break;
+    }
+
+        return  $gender;
+    }
+}
 
 ?>

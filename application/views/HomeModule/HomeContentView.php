@@ -24,7 +24,7 @@
             <?= $value->Description ?>
           </p>
           <?php if(!empty($value->EventId)): ?>
-          Reservation <a target="_blank" href="<?= base_url() ?>view-event/<?= $value->EventId ?> ">event link here</a>
+          View full details <a target="_blank" href="<?= base_url() ?>view-event/<?= $value->EventId ?> ">event link here</a>
           <?php endif; ?>
         </div>
         <?php if(!empty($value->ContentImage)): ?>

@@ -13,7 +13,7 @@ class MainModel extends CI_Model
     protected $tbl_event_attendees = "tbl_event_attendees";
     protected $tbl_workgroup = "tbl_workgroup";
     protected $tbl_workgruop_access = "tbl_workgruop_access";
-
+    protected $tbl_event_bookmark = "tbl_event_bookmark";
     public function __construct()
     {   
         $this->max_concat = $this->db->query("SET SESSION group_concat_max_len = 18446744073709551615;");
@@ -149,12 +149,12 @@ class MainModel extends CI_Model
                 SELECT 
                     *
                 FROM
-                    {$this->tbl_event_attendees} as a
+                    {$this->tbl_event_bookmark} as a
                 LEFT JOIN 
                     {$this->tbl_event_list} el  on a.EventId = el.EventId
                     
                 WHERE
-                    a.Username = '{$Username}'
+                    a.Username = '{$Username}' AND a.DeletedTag = 0
                     
                 ORDER BY el.EventStart ";
         return $this->db->query($get_attendees)->result_object();
@@ -171,5 +171,26 @@ class MainModel extends CI_Model
     return $this->db->query($sql)->result_object();
    }
    
- 
+
+   public function checkBookmarkByEventId($event_id,$user_id,$isDeleted){
+    $isDeleted = $isDeleted == 1 ? '' : 'AND DeletedTag = 0';
+    $sql = "SELECT * FROM {$this->tbl_event_bookmark} WHERE EventId = {$event_id} AND Username = '{$user_id}' {$isDeleted }";
+    return $this->db->query($sql)->num_rows() > 0 ? true : false;
+   }
+
+  public function getUsersDataById($username){
+    $sql = "SELECT * FROM {$this->tbl_user} WHERE Username = '{$username}'";
+    return $this->db->query($sql)->row();
+  }
+  public function getWorkgroupAccessbyRole($role_id){
+
+    $sql = "SELECT * FROM {$this->tbl_workgruop_access} WHERE WorkgroupId = {$role_id}";
+    return $this->db->query($sql)->row();
+  }
+
+  public function getGenderNameById($id){
+
+    $sql = "SELECT * FROM {$this->tbl_gender} WHERE id = {$id}";
+    return $this->db->query($sql)->row();
+  }
 }

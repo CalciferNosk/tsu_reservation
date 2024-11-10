@@ -228,4 +228,19 @@ class EventController extends CI_Controller
 
         echo json_encode($data);
     }
+
+    public function addBookmark(){
+
+
+        $check =  _checkBookmarkByEventId($_POST['event_id'],1);
+
+       if($check == 1){
+            $result = $this->event_m->updatedBookmark($_POST['event_id'],$_SESSION['username'],$_POST['bookmark']);
+       }
+       else{
+            $result = $this->event_m->insertBookmark($_POST['event_id'],$_SESSION['username']);
+       }
+       echo json_encode($result);
+
+    }
 }

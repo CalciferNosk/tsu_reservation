@@ -47,8 +47,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
             background-color: #fffc9c61 !important;
             color: #800000 !important;
         }
-
-        .hover_event_list_ongoing {
+        .hover_event_list_ongoing{
             background-color: #a4ff9c9e !important;
             color: #800000 !important;
         }
@@ -95,7 +94,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#"><b><?= strtoupper($this->session->userdata('username')) ?></b></a></li>
-                            <li><a class="dropdown-item" target="_blank" href="<?= base_url() ?>account-setting">Account Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Account Settings</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -197,13 +196,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         </div>
                         <div class="card m-3 p-2">
                             <center>
-                                <i class="bookmark-icon" >
-                                    <svg id="bookmark-i" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                    </svg>
-                                </i>
-
-                                <h6>Bookmarked</h6>
+                                <h6>MY EVENT</h6>
                             </center>
                             <hr>
                             <div id="home_event_list_join">
@@ -251,7 +244,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         </div>
                     </div>
                     <div class="col-md-3 border-line-left">
-                        <div class="card m-3 p-2">
+                    <div class="card m-3 p-2">
                             <center>
                                 <h6>EVENT LOG</h6>
                             </center>
@@ -284,14 +277,17 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         </div>
                         <div class="card-body">
 
-                            <!-- old reservation table  -->
+                                <!-- old reservation table  -->
                             <table class=" nowrap" style="width:100%" id="event_table_list">
                                 <thead class="bg-light table-light">
                                     <tr>
                                         <th class="th_class">EVENT NAME</th>
                                         <th class="th_class">EVENT START</th>
                                         <th class="th_class">ORGANIZER</th>
+                                        <th class="th_class">CAPACITY</th>
                                         <th class="th_class">EVENT STATUS</th>
+                                        <th class="th_class">RESERVED END</th>
+                                        <th class="th_class">QUICK RESERVED</th>
                                         <th class="th_class">ACTION</th>
                                         <th class="th_class">Full Details</th>
 
@@ -299,7 +295,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                 </thead>
                                 <tbody>
                                     <?php foreach ($event_list as $key => $value) : ?>
-                                        <tr class=" <?= _getDateStatus($value->EventStart) == 1 ? 'hover_event_list_ongoing' : 'hover_event_list' ?>">
+                                        <tr class=" <?= _getDateStatus($value->EventStart) == 1 ? 'hover_event_list_ongoing':'hover_event_list' ?>">
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="ms-3">
@@ -308,7 +304,6 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                     </div>
                                                 </div>
                                             </td>
-
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="ms-3">
@@ -318,7 +313,6 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                     </div>
                                                 </div>
                                             </td>
-
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <img
@@ -331,20 +325,50 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                         <p class="text-muted mb-0"><?= _getUserRole($value->EventOrganizer) ?></p>
                                                     </div>
                                                 </div>
-                                            </td>
 
+
+                                            </td>
+                                            <td>
+                                                <center><?= $value->AttendeeCount . '/' . $value->EventSlot ?></center>
+                                            </td>
                                             <td>
                                                 <?= _getStatusBadge($value) ?>
                                             </td>
-
                                             <td>
-                                                <a href="<?= base_url() ?>view-event/<?= $value->EventId ?>" target="frame">
-                                                    <i class="fas fa-eye event-view event-action" data-mdb-ripple-init
-                                                        data-mdb-tooltip-init
-                                                        data-mdb-html="true"
-                                                        title="View"></i>
-                                                </a>
-                                                <?php if (in_array($_SESSION['username'], [$value->EventOrganizer, $value->CreatedBy])): ?>
+                                                <?php if (_getDateStatus($value->EventReservationEnd)  ==  0):
+
+                                                    if (_getDateStatus($value->EventReservationStart) == 1):
+                                                ?>
+                                                        <center><?= date('M j, Y', strtotime($value->EventReservationEnd));  ?></center>
+                                                    <?php
+                                                    else:
+                                                    ?>
+                                                        <center>--</center>
+                                                    <?php
+                                                    endif;
+                                                else: ?>
+                                                    <center>
+                                                        <button type="button" class="btn btn-secondary btn-sm btn-rounded">
+                                                            Closed
+                                                        </button>
+                                                    </center>
+                                                <?php endif; ?>
+
+                                            </td>
+                                            <td>
+
+                                                <?php if (_getDateStatus($value->EventReservationEnd)  ==  1):  ?>
+                                                    <button type="button" class="btn btn-primary btn-sm btn-rounded view_event" data-start="<?= _getDateStatus($value->EventReservationStart) ?>" data-status="0" data-end="<?= _getDateStatus($value->EventReservationEnd) ?>" data-rowdata="<?= base64_encode(json_encode($value)) ?>" data-reservedata="<?= $value->ReserveData ?>" data-eventid="<?= $value->EventId ?>">
+                                                        Participants
+                                                    </button>
+                                                <?php else: ?>
+                                                    <button type="button" class="btn <?= _getDateStatus($value->EventReservationStart) == 1 ? 'btn-success' : 'btn-primary' ?> btn-sm btn-rounded view_event" data-start="<?= _getDateStatus($value->EventReservationStart) ?>" data-status="1" data-end="<?= _getDateStatus($value->EventReservationEnd) ?>" data-rowdata="<?= base64_encode(json_encode($value)) ?>" data-reservedata="<?= $value->ReserveData ?>" data-eventid="<?= $value->EventId ?>">
+                                                        <?= _getDateStatus($value->EventReservationStart) == 1 ? 'RESERVE NOW' : 'Start Soon'  ?>
+                                                    </button>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php if (in_array($_SESSION['username'], [$value->EventOrganizer, $value->CreatedBy]) && _getDateStatus($value->EventReservationEnd)  ==  0): ?>
                                                     <i class="fas fa-edit event-edit event-action" data-mdb-ripple-init
                                                         data-mdb-tooltip-init
                                                         data-mdb-html="true"
@@ -357,16 +381,20 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                     <center>--</center>
                                                 <?php endif; ?>
                                             </td>
-
                                             <td>
-
+                                                <a href="<?= base_url() ?>view-event/<?= $value->EventId ?>" target="frame">
+                                                    <i class="fas fa-eye event-view event-action" data-mdb-ripple-init
+                                                        data-mdb-tooltip-init
+                                                        data-mdb-html="true"
+                                                        title="View"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
 
                                 </tbody>
                             </table>
-                            <!-- old reservation table end  -->
+                                <!-- old reservation table end  -->
 
 
 
@@ -426,11 +454,11 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                             <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <form action="#" method="post" id="editEventForm" enctype="multipart/form-data">
-                                            <div class="modal-body">
+                                        <div class="modal-body">
                                                 <div class="row">
                                                     <div class="col-md-12 mb-3">
                                                         <div class="form-outline" data-mdb-input-init>
-                                                            <input type="text" id="edit-event-name" name="edit-event-name" class="form-control" value="" required />
+                                                            <input type="text" id="edit-event-name" name="edit-event-name" class="form-control" value="" required/>
                                                             <label class="form-label" for="edit-event-name">EVENT NAME</label>
                                                         </div>
                                                     </div>
@@ -447,6 +475,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                     </div>
 
                                                     <div class="col-md-4 mb-3">
+
                                                         <div class="form-group">
                                                             <label> Organizer</label>
                                                             <select class="mdb-select form-select" name="edit-event-organizer" id="edit-event-organizer" required>
@@ -457,38 +486,55 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                             </select>
                                                         </div>
                                                     </div>
+
+                                                    <div class="col-md-4 mb-3">
+                                                        <label>EVENT SLOT</label>
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="number" id="edit-event-slot" name="edit-event-slot" class="form-control" value="" required/>
+                                                            <label class="form-label" for="edit-event-slot">EVENT SLOT</label>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-md-6 mb-3">
                                                         <div class="form-outline" data-mdb-input-init>
-                                                            <input type="date" id="edit-event-start" name="edit-event-start" class="form-control datepicker date-input" required />
+                                                            <input type="date" id="edit-event-start" name="edit-event-start" class="form-control datepicker date-input" required/>
                                                             <label class="form-label" for="edit-event-start">EVENT START</label>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-md-6 mb-3">
                                                         <div class="form-outline" data-mdb-input-init>
-                                                            <input type="date" id="edit-event-end" name="edit-event-end" class="form-control datepicker date-input" required />
+                                                            <input type="date" id="edit-event-end" name="edit-event-end" class="form-control datepicker date-input" required/>
                                                             <label class="form-label" for="edit-event-end">EVENT END</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12 mb-3">
-                                                        <Label>Short Description</Label>
-                                                        <input class="form-control" id="edit-event-description" name="edit-event-description" type="text" placeholder="Short Description">
-                                                    </div>
-                                                    <div class="col-md-12 mb-3">
-                                                        <Label>Full Details Description</Label>
-                                                        <textarea class="summernote" id="edir-event-details" name="edit-event-details"></textarea>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="date" id="edit-event-reservation_start" name="edit-event-reservation_start" class="form-control datepicker date-input" required/>
+                                                            <label class="form-label" for="edit-event-reservation_start">RESERVATION START</label>
+                                                        </div>
                                                     </div>
 
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="date" id="edit-event-reservation_end" name="edit-event-reservation_end" class="form-control datepicker date-input" required/>
+                                                            <label class="form-label" for="edit-event-reservation_end">RESERVATION END</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 mb-3">
+                                                        <Label>Description</Label>
+                                                        <textarea class="summernote" id="edit-event-description" name="edit-event-description" required></textarea>
+                                                    </div>
                                                     <input type="hidden" name="edit-event-id" id="edit-event-id">
                                                     <hr>
-
+                                                 
                                                 </div>
                                             </div>
-
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-primary" id="save_update" data-mdb-ripple-init>Save Update</button>
-                                            </div>
-                                        </form>
+                                  
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary" id="save_update" data-mdb-ripple-init>Save Update</button>
+                                        </div>
+                                    </form>
                                     </div>
                                 </div>
                             </div>
@@ -514,7 +560,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                             <label class="form-label" for="new-event-name">EVENT NAME</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6 mb-3">
+                                                    <div class="col-md-4 mb-3">
                                                         <div class="form-group">
                                                             <label>Location</label>
                                                             <select class="mdb-select form-select" name="new-event-location" id="new-event-location">
@@ -526,15 +572,24 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                         </div>
                                                     </div>
 
-                                                    <div class="col-md-6 mb-3">
+                                                    <div class="col-md-4 mb-3">
+
                                                         <div class="form-group">
                                                             <label> Organizer</label>
                                                             <select class="mdb-select form-select" name="new-event-organizer" id="new-event-organizer">
                                                                 <option value="" disabled selected>Choose Organizer</option>
                                                                 <?php foreach (_getAllUsers() as $key => $user): ?>
-                                                                    <option value="<?= $user->Username ?>" <?= ($_SESSION['username'] == $user->Username ? 'selected' : '') ?>><?= strtoupper($user->Lname . ' ' . $user->Fname . ', ' . (empty($user->Mname) ? '_' : substr($user->Mname, 0, 1) . '.')) ?></option>
+                                                                    <option value="<?= $user->Username ?>"><?= strtoupper($user->Lname . ' ' . $user->Fname . ', ' . (empty($user->Mname) ? '_' : substr($user->Mname, 0, 1) . '.')) ?></option>
                                                                 <?php endforeach; ?>
                                                             </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-4 mb-3">
+                                                        <label>EVENT SLOT</label>
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="number" id="new-event-name" name="new-event-name" class="form-control" value="" />
+                                                            <label class="form-label" for="new-event-name">EVENT SLOT</label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 mb-3">
@@ -550,13 +605,27 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                             <label class="form-label" for="new-event-end">EVENT END</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12 mb-3">
-                                                        <Label>Short Description</Label>
-                                                        <input class="form-control" id="new-event-description" name="new-event-description" type="text" placeholder="Short Description">
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="date" id="new-event-reservation_start" name="new-event-reservation_start" class="form-control datepicker date-input" />
+                                                            <label class="form-label" for="new-event-reservation_start">RESERVATION START</label>
+                                                        </div>
                                                     </div>
+
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-outline" data-mdb-input-init>
+                                                            <input type="date" id="new-event-reservation_end" name="new-event-reservation_end" class="form-control datepicker date-input" />
+                                                            <label class="form-label" for="new-event-reservation_end">RESERVATION END</label>
+                                                        </div>
+                                                    </div>
+
+
+
+
                                                     <div class="col-md-12 mb-3">
-                                                        <Label>Full Details Description</Label>
-                                                        <textarea class="summernote" id="new-event-details" name="new-event-details"></textarea>
+                                                        <Label>Description</Label>
+                                                        <textarea class="summernote" id="new-event-description" name="new-event-description"></textarea>
                                                     </div>
                                                     <hr>
                                                     <div class="col-md-12 mb-3">

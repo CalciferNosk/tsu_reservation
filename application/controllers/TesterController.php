@@ -20,6 +20,6 @@ class TesterController extends CI_Controller {
 	 */
 	public function test()
 	{
-		var_dump(_getWorkgroupAccess('CreateEvent'));
+		var_dump(_getWorkgroupAccessbyRole(2) );
 	}
 }

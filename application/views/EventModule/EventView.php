@@ -37,6 +37,10 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
         width: 80%;
         margin: auto;
     }
+
+    .bookmark-icon:hover {
+        transform: scale(1.06);
+    }
 </style>
 
 <body>
@@ -44,7 +48,12 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
         <a href="<?= base_url() ?>"><i class="fas fa-home" style="font-size: 15px;"></i></a>
         <div class="card m-3 p-2">
             <div class="card-header">
-                <span><b><?= $event->EventName ?></b></span>
+                <!-- <span><b><?= $event->EventName ?></b></span> -->
+                <i class="bookmark-icon" data-isbookmarked="<?= _checkBookmarkByEventId($event->EventId,0) ?>" data-eventid="<?= $event->EventId ?>">
+                    <svg id="bookmark-i" width="24" height="24" viewBox="0 0 24 24" fill="<?= _checkBookmarkByEventId($event->EventId,0) == true ? '#fec530' : 'none' ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </i>
 
                 <span style="float: right;">
                     <?php if (_getStaffEvent($_SESSION['username'], $event->EventId)):  ?>
@@ -76,12 +85,23 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                             </ul>
                         </div>
                     <?php else:
+                    $token = '';
                     ?>
                         <i class="fas fa-calendar-check" style="color:green"></i>
                     <?php endif; ?>
                 </span>
             </div>
             <div class="body">
+                <div id="<?= $event->EventId ?>">
+                    <?php if (!empty(_getEventPhoto($event->EventId))):  ?>
+                        <figure>
+                            <center>
+                                <img style="width: 50%;" src="<?= base_url() ?>assets/feed_images/<?= _getEventPhoto($event->EventId) ?>" alt="">
+                            </center>
+                        </figure>
+
+                    <?php endif ?>
+                </div>
                 <table>
                     <tr>
                         <td><b>Event Name</b></td>
@@ -108,16 +128,7 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                         <td>: <?= $event->Description ?></td>
                     </tr>
                 </table>
-                <div id="<?= $event->EventId ?>">
-                    <?php if(!empty(_getEventPhoto($event->EventId))):  ?>
-                        <figure>
-                            <center>
-                            <img style="width: 50%;" src="<?= base_url() ?>assets/feed_images/<?= _getEventPhoto($event->EventId) ?>" alt="">
-                            </center>
-                        </figure>
-                  
-                    <?php endif ?>
-                </div>
+
             </div>
         </div>
         <!-- Button trigger modal -->
@@ -140,25 +151,25 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
             </div>
         </div>
 
-         <!-- Button trigger modal -->
-         <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#qrStaff" hidden>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#qrStaff" hidden>
 
-</button>
+        </button>
 
-<!-- Modal -->
-<div class="modal fade" id="qrStaff" tabindex="-1" aria-labelledby="qrStaffLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="qrStaffLabel">Gatepass QR Code</h5>
-                <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="qr_div_staff"></div>
+        <!-- Modal -->
+        <div class="modal fade" id="qrStaff" tabindex="-1" aria-labelledby="qrStaffLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qrStaffLabel">Gatepass QR Code</h5>
+                        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="qr_div_staff"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
     </div>
 
@@ -173,7 +184,7 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
             const base_url = "<?= base_url() ?>";
             const token = "<?= $token ?>";
             const username = "<?= $_SESSION['username'] ?>";
-           
+
             $("#generate").click(function() {
                 $('#qrcodeModal').modal('show');
                 var event_name = "<?= $event->EventName ?>";
@@ -198,14 +209,42 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
 
             })
 
-            $(document).on('click','#organizer_qr',function(){
-
-var time = $('#time').val();
-var event_name = "<?= $event->EventName ?>";
-var event_id = "<?= $event->EventId ?>";
-var username_link = btoa(username);
-var link = base_url + "qr-staff-event/"+ time+"/" + event_id + "/?username=" + username_link + '&token=' + token;
-$("#qr_div_staff").html(` <center>
+            $(document).on('click', '.bookmark-icon', function() {
+                var bookmark = $(this).data('isbookmarked');
+                var event_id = $(this).data('eventid');
+               ;
+                if(bookmark == 1){
+                    $(this).children().attr('fill','none')
+                    $(this).attr('data-isbookmarked',0)
+                }else{
+                    $(this).children().attr('fill','#fec530')
+                    $(this).attr('data-isbookmarked',1)
+                }
+                $.ajax({
+                    url: base_url+'add-bookmark',
+                    method: 'POST',
+                    data: {
+                        bookmark: $(this).attr('data-isbookmarked'),
+                        event_id: $(this).attr('data-eventid')
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        location.reload();
+                    }
+                })
+               
+            })
+            function isbookmark(animation) {
+                var bookmark = $(this).data('isbookmarked');
+            }
+            $(document).on('click', '#organizer_qr', function() {
+                var time = $('#time').val();
+                var event_name = "<?= $event->EventName ?>";
+                var event_id = "<?= $event->EventId ?>";
+                var username_link = btoa(username);
+                var date = `<?= base64_encode(date('Y-m-d H:i:s')) ?>`
+                var link = base_url + "qr-staff-event/" + time + "/" + event_id + "/?username=" + username_link + '&token=' + token + '&validity=' + date;
+                $("#qr_div_staff").html(` <center>
                             <p class="sacramento-regular"><b>${event_name}</b></p>
                           
                             <qr-code id="qr1" contents="${link}" module-color="black" position-ring-color="black" position-center-color="black" style="background-color: #fff;">
@@ -213,15 +252,15 @@ $("#qr_div_staff").html(` <center>
                             </qr-code>
                               <p class="sacramento-regular">Scan to ${time}</p>
                         </center>`);
-var animation = 'FadeInTopDown';
-$('#qrStaff').modal('show')
-console.log(link);
-genereteQRCode(animation);
+                var animation = 'FadeInTopDown';
+                $('#qrStaff').modal('show')
+                console.log(link);
+                genereteQRCode(animation);
 
-})
+            })
         })
 
-       
+
         // source code animation
         // https://github.com/bitjson/qr-code
         function genereteQRCode(animation) {

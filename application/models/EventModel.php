@@ -9,6 +9,7 @@ class EventModel extends CI_Model
     protected $tbl_event_attendees = 'tbl_event_attendees';
     protected $tbl_event_attendees_log = 'tbl_event_attendees_log';
     protected $tbl_event_staff = 'tbl_event_staff';
+    protected $tbl_event_bookmark = "tbl_event_bookmark";
 
     public function __construct()
     {
@@ -85,4 +86,17 @@ class EventModel extends CI_Model
     $result = $this->db->query($sql);
     return  empty($result->row()) ? null : $result->row()->ContentImage;
   }
+  public function insertBookmark($event_id,$user_id){
+    $data = [
+        'Username' => $user_id,
+        'EventId'  => $event_id
+    ];
+    return $this->db->insert($this->tbl_event_bookmark,$data);
+   }
+
+   public function updatedBookmark($event_id,$user_id,$bookmark){
+    $bookmark = $bookmark == 1 ? 0 : 1;
+    $sql = "UPDATE {$this->tbl_event_bookmark} SET DeletedTag = {$bookmark} WHERE EventId = {$event_id} AND Username = '{$user_id}' ";
+    return $this->db->query($sql);
+   }
 }
