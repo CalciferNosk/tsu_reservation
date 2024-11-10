@@ -53,6 +53,10 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
             color: #800000 !important;
         }
     }
+    .rounded-circle {
+    border-radius: 50%;
+    object-fit: cover;
+}
 </style>
 
 <body style="background-color: #fbfbef;">
@@ -89,10 +93,9 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                 <!-- Dropdown -->
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
-                        <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                            <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle"
-                                height="50" alt="Avatar" loading="lazy" />
-                        </a>
+                       <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                           <img src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($_SESSION['username']) ?>" class="rounded-circle shadow-sm" style="width: 45px; height: 45px" alt="Avatar" loading="lazy" />
+                       </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#"><b><?= strtoupper($this->session->userdata('username')) ?></b></a></li>
                             <li><a class="dropdown-item" target="_blank" href="<?= base_url() ?>account-setting">Account Settings</a></li>
