@@ -86,6 +86,11 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                     <li class="nav-item">
                         <a class="nav-link tab-link" data-content="calendar" id="nav_calendar" href="<?= base_url() ?>calendar">Calendar</a>
                     </li>
+                    <?php if ($_SESSION['role'] == 2): ?>
+                        <li class="nav-item">
+                            <a class="nav-link tab-link" data-content="game" id="nav_game" s href="#">Generate Game</a>
+                        </li>
+                    <?php endif; ?>
                     <li class="nav-item">
                         <a class="nav-link tab-link" data-content="contact" id="nav_contact" s href="#">Contact Us</a>
                     </li>
@@ -595,6 +600,54 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
             <div class="content_div" id="calendar_content" style="display: none;">
                 <center><a href="<?= base_url('calendar') ?>">Got to Calendar</a></center>
             </div>
+            <div class="content_div" id="game_content" style="display: none;">
+                <div class="container-fluid">
+                    <div class="card m-5">
+                        <div class="card-header">
+                            <h3>Game generator</h3>
+                        </div>
+                        <div class="body p-3">
+                            <h4>Sport to play</h4>
+                          
+                            <select class="mdb-select form-select" name="sport" id="sport" style="width: 40%;">
+                                <option value="" disabled selected>Choose Sport</option>
+                                <option value="BasketBall"> Basketball</option>
+                                <option value="Volleyball"> Volleyball</option>
+                                <option value="Badminton"> Badminton</option>
+                                <option value="Sepak Takraw"> Sepak Takraw</option>
+                                <option value="Football"> Football</option>
+                                <option value="Footsalt">Fotsalt</option>
+                            </select>
+                            <hr>
+                            <h4>Select Course to generate</h4>
+                           
+                            
+                            <?php foreach (_getAllCourses() as $key => $value):  ?>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input courses_check" type="checkbox" role="switch" id="course<?= $key ?>" value="<?= $value->CourseCode ?>" />
+                                    <label class="form-check-label" for="course<?= $key ?>"><?= $value->CourseTitle ?></label>
+                                </div>
+                            <?php endforeach;  ?>
+                            <br>
+                            <hr>
+                            <h4>Game Mode</h4>
+                            <!-- Default radio -->
+                            <div class="form-check">
+                                <input class="form-check-input game_mode" type="radio" name="gmode" id="single1" value="1" checked/>
+                                <label class="form-check-label" for="single1">Single elimination</label>
+                            </div>
+
+                            <!-- Default checked radio -->
+                            <div class="form-check">
+                                <input class="form-check-input game_mode" type="radio" name="gmode" value="2" id="roundrobin2"  />
+                                <label class="form-check-label" for="roundrobin2"> Round Robin</label>
+                            </div>
+                            <hr>
+                            <button type="button" class="btn btn-primary" id="generateGame">Generate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="content_div" id="contact_content" style="display: none;">
                 <div class="container-fluid">
@@ -638,7 +691,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                             <!-- <form action="#" method="post" id="newUserForm" enctype="multipart/form-data"> -->
                             <form action="" method="post" id="newContactForm">
                                 <div class="modal-body">
-                                    <div class="form-outline" >
+                                    <div class="form-outline">
                                         <input name="request_date" type="text" id="date" class="form-control" value="<?= date('Y-m-d') ?>" readonly />
                                         <label class="form-label" for="date">request date</label>
                                     </div>
@@ -653,7 +706,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                             <option value="6">Others</option>
                                         </select>
                                     </div>
-                                    <div class="form-outline" >
+                                    <div class="form-outline">
                                         <label for=""> Description</label>
                                         <textarea name="description" class="summernote" id=""></textarea>
                                     </div>
@@ -682,13 +735,47 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
 
     <script>
         $(document).ready(function() {
+            $(document).on('click', '#generateGame', function() {
+                var courses = [];
+                $.each($('.courses_check'), function(index, value) {
+                    if ($(this).is(':checked')) {
+                        courses.push($(this).val());
+                    }
+                })
+
+                var game_mode = $('input[name="gmode"]:checked').val();
+                var game = $('#sport').val();
+                if (game == '') {
+                    alert('Please select a game');
+                    return false;
+                }
+                if(courses.length < 2){
+                    alert('Please select at least 2 courses');
+                    return false;
+                }
+                console.log(courses, game_mode);
+                $.ajax({
+                    url: base_url + "generate-game",
+                    type: "POST",
+                    data: {
+                        courses: courses,
+                        game_mode: game_mode,
+                        game: game
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response);
+                    }})
+            })
+
+
             $(document).on('click', '#addNewContact', function() {
                 $('#ContactModal').modal('show');
             })
             if (new_user == 1) {
                 $('#newUserModal').modal('show');
             }
-          
+
 
             var content = sessionStorage.getItem("nav" + username);
             if (content !== null) {

@@ -79,6 +79,7 @@ $route['account-setting'] = 'MainController/accountSetting';
 $route['save-profile'] = 'MainController/saveProfile';
 $route['change-password'] = 'MainController/changePassword';
 $route['update-details']    = 'MainController/updateDetails';
+$route['generate-game'] = 'MainController/generateGame';
 
 
 $route['calendar'] = 'MainController/getCalendar';

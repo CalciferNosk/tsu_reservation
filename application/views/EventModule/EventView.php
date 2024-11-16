@@ -63,7 +63,7 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                             <option value="OUT">OUT</option>
                         </select>
                     <?php endif ?>
-                    <?php if (!empty(_checkUserEvent($_SESSION['username'], $event->EventId))):
+                    <?php if (_getDateBetween($event->EventStart, $event->EventEnd) == 1 || $_SESSION['role'] == 2):
                         $token = strtoupper(hash("sha256", $_SESSION['username'] . date("Y-m-d")))
                     ?>
                         <div class="btn-group shadow-0 mb-2">
@@ -88,7 +88,7 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                     <?php else:
                     $token = '';
                     ?>
-                        <i class="fas fa-calendar-check" style="color:green"></i>
+                        <i>Event Unavailable</i>
                     <?php endif; ?>
                 </span>
             </div>

@@ -244,5 +244,9 @@ class MainModel extends CI_Model
     return $id==null ? $this->db->query($sql)->result_object() : $this->db->query($sql)->row();
   }
 
+  public function getAllCourses(){
+    $sql = "SELECT * FROM {$this->tbl_courses}";
+    return $this->db->query($sql)->result_object();
+  }
 
 }

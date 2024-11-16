@@ -239,8 +239,11 @@ class MainController extends CI_Controller
 		$data['result'] = $this->main_m->getAllMyConcerns($id);
 	
 		$this->load->view('MainModule/ViewConcernView', $data);
+	}
 
-		
-
+	public function generateGame(){
+		if(isset($_POST)){
+			
+		}
 	}
 }

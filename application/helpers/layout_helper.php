@@ -153,6 +153,89 @@ if (! function_exists('_getDateStatus')) {
     }
 }
 
+
+if(! function_exists('_getDateBetween')){
+
+    function _getDateBetween($start,$end){
+        $startDate = $start;
+        $endDate = $end;
+        $checkDate = date('Y-m-d');
+        // var_dump('<pre>',$checkDate, $startDate, $endDate);
+        
+        if ($startDate <= $checkDate && $checkDate <= $endDate) {
+           return true;
+        } else {
+            return false;
+        }
+    }
+
+}
+
+if(! function_exists('_roundRobin')){
+
+   function _roundRobin($teams) {
+       $n = count($teams);
+       $matches = [];
+   
+       // Shuffle the teams array to randomize the order
+       shuffle($teams);
+   
+       for ($i = 0; $i < $n - 1; $i++) {
+           for ($j = 0; $j < $n / 2; $j++) {
+               $matches[] = [
+                   'team1' => $teams[$j],
+                   'team2' => $teams[$n - 1 - $j]
+               ];
+   
+               if ($j > 0) {
+                   $matches[] = [
+                       'team1' => $teams[$n - $j],
+                       'team2' => $teams[$n - 1 - $j]
+                   ];
+               }
+           }
+   
+           // Rotate the teams array to create the next round
+           $teams = array_merge([$teams[count($teams) - 1]], array_slice($teams, 0, count($teams) - 1));
+       }
+   
+       return $matches;
+   }
+    
+   
+}
+if(! function_exists('_generateBracket')){
+    function _generateBracket($teams) {
+        $matches = _singleElimination($teams);
+        $winners = [];
+    
+        foreach ($matches as $match) {
+            $winners[] = 'Winner of ' . $match['team1'] . ' vs ' . $match['team2'];
+        }
+    
+        return [
+            'matches' => $matches,
+            'winners' => $winners
+        ];
+    }
+}
+
+if(! function_exists('_singleElimination')){
+    function _singleElimination($teams) {
+        $n = count($teams);
+        $matches = [];
+    
+        for ($i = 0; $i < $n / 2; $i++) {
+            $matches[] = [
+                'team1' => $teams[$i],
+                'team2' => $teams[$n - 1 - $i]
+            ];
+        }
+    
+        return $matches;
+    }
+}
+
 if (! function_exists('_getStatusBadge')) {
 
     function _getStatusBadge($value)
@@ -338,11 +421,23 @@ if( ! function_exists('_getConcernCategoryById')){
         $concern = $CI->main_m->getConcernCategoryById($cat_id);
  
         return  $concern;
+    }
+}
+
+if(!function_exists('_getAllCourses')){
+
+    function _getAllCourses()
+    {
+
+        $CI =& get_instance();
+        $CI->load->model('MainModel','main_m');
+        $courses = $CI->main_m->getAllCourses();
+ 
+        return  $courses;
      
     }
 
 
 }
-
 
 ?>
