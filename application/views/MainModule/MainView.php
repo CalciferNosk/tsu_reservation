@@ -94,6 +94,11 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                     <li class="nav-item">
                         <a class="nav-link tab-link" data-content="contact" id="nav_contact" s href="#">Contact Us</a>
                     </li>
+                    <?php if ($_SESSION['role'] == 2): ?>
+                        <li class="nav-item">
+                            <a class="nav-link tab-link" data-content="report" id="nav_report" s href="#">Generate Report</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
 
                 <!-- Dropdown -->
@@ -608,7 +613,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         </div>
                         <div class="body p-3">
                             <h4>Sport to play</h4>
-                          
+
                             <select class="mdb-select form-select" name="sport" id="sport" style="width: 40%;">
                                 <option value="" disabled selected>Choose Sport</option>
                                 <option value="BasketBall"> Basketball</option>
@@ -620,8 +625,6 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                             </select>
                             <hr>
                             <h4>Select Course to generate</h4>
-                           
-                            
                             <?php foreach (_getAllCourses() as $key => $value):  ?>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input courses_check" type="checkbox" role="switch" id="course<?= $key ?>" value="<?= $value->CourseCode ?>" />
@@ -633,17 +636,37 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                             <h4>Game Mode</h4>
                             <!-- Default radio -->
                             <div class="form-check">
-                                <input class="form-check-input game_mode" type="radio" name="gmode" id="single1" value="1" checked/>
+                                <input class="form-check-input game_mode" type="radio" name="gmode" id="single1" value="1" checked />
                                 <label class="form-check-label" for="single1">Single elimination</label>
                             </div>
-
                             <!-- Default checked radio -->
                             <div class="form-check">
-                                <input class="form-check-input game_mode" type="radio" name="gmode" value="2" id="roundrobin2"  />
+                                <input class="form-check-input game_mode" type="radio" name="gmode" value="2" id="roundrobin2" />
                                 <label class="form-check-label" for="roundrobin2"> Round Robin</label>
+                            </div>
+
+                            <hr>
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <div class="form-outline">
+                                        <input name="request_date" type="date" id="start_date" class="form-control" value="<?= (new DateTime())->modify('+1 days')->format('Y-m-d') ?>" />
+                                        <label class="form-label" for="date">Start Date</label>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-outline" data-mdb-input-init style="width: 10%;">
+                                    <input type="number" id="match_per_day" class="form-control" value="1" />
+                                    <label class="form-label" for="match_per_day">Match Per Day</label>
+                                </div>
                             </div>
                             <hr>
                             <button type="button" class="btn btn-primary" id="generateGame">Generate</button>
+                        </div>
+
+                        <div class="row m-5">
+                            <h5>Result:</h5>
+                            <span id="result_match"></span>
                         </div>
                     </div>
                 </div>
@@ -745,27 +768,46 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
 
                 var game_mode = $('input[name="gmode"]:checked').val();
                 var game = $('#sport').val();
-                if (game == '') {
+                var start_date = $('#start_date').val();
+                var match_per_day = $('#match_per_day').val();
+                if (game == '' || game == null) {
                     alert('Please select a game');
                     return false;
                 }
-                if(courses.length < 2){
+                if (courses.length < 2) {
                     alert('Please select at least 2 courses');
                     return false;
                 }
-                console.log(courses, game_mode);
-                $.ajax({
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, generate and save!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
                     url: base_url + "generate-game",
                     type: "POST",
                     data: {
                         courses: courses,
                         game_mode: game_mode,
-                        game: game
+                        game: game,
+                        start_date: start_date,
+                        match_per_day: match_per_day
                     },
                     dataType: "json",
                     success: function(response) {
+                        $('#generateGame').hide();
                         console.log(response);
-                    }})
+                        $('#result_match').html(response.result.display);
+                    }
+                })
+                    }
+                });
+               
             })
 
 

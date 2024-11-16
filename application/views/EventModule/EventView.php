@@ -57,7 +57,7 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                 </i>
 
                 <span style="float: right;">
-                    <?php if (_getStaffEvent($_SESSION['username'], $event->EventId)):  ?>
+                    <?php if ($_SESSION['role'] == 2):  ?>
                         <select name="time" id="time" class="form-group">
                             <option value="IN">IN</option>
                             <option value="OUT">OUT</option>

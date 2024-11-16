@@ -248,5 +248,40 @@ class MainModel extends CI_Model
     $sql = "SELECT * FROM {$this->tbl_courses}";
     return $this->db->query($sql)->result_object();
   }
+  public function storeSchedule($schedule,$game){
+    $data = [];
+    // var_dump('<pre>');
+    foreach ($schedule as $key => $value) {
 
+        foreach ($value as $k => $v) {
+            array_push($data,
+        [
+            'EventTypeId' => 1,
+            'EventName' => $game,
+            'Description' => $v["team1"] .' vs '. $v["team2"],
+            'EventStart' => $key,
+            'EventEnd' => $key,
+            'EventOrganizer' => $_SESSION['username'],
+
+        ]
+    );
+        }
+        
+    }
+    // var_dump($data);die;
+    $result = $this->db->insert_batch($this->tbl_event_list,$data);
+    return $result;
+  }
+
+  public function storeContent($content,$game){
+    $data = [
+        'ContentTitle' =>'Game Generated : '. $game,
+        'Description' => $content,
+        'PostCreatedby' => $_SESSION['username'],
+        'Createdby' => $_SESSION['username'],
+    ];
+
+    $result = $this->db->insert($this->tbl_content,$data);
+    return $result;
+  }
 }

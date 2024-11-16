@@ -204,6 +204,41 @@ if(! function_exists('_roundRobin')){
     
    
 }
+
+if(! function_exists('_generateSchedule')){
+function _generateSchedule($bracket, $startDate) {
+    $schedule = [];
+    $matches = $bracket['matches'];
+    $day = 1;
+    $currentDate = strtotime($startDate);
+
+    while ($matches) {
+        $dayMatches = array_slice($matches, 0, 2);
+        $matches = array_slice($matches, 2);
+
+        $date = date('Y-m-d', $currentDate);
+        $dayOfWeek = date('w', $currentDate); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+        // Skip Sundays and Saturdays
+        if ($dayOfWeek == 0 || $dayOfWeek == 6) {
+            $currentDate += 86400; // add 1 day
+            continue;
+        }
+
+        $schedule[] = [
+            'date' => $date,
+            'matches' => $dayMatches
+        ];
+
+        $currentDate += 86400; // add 1 day
+        $day++;
+    }
+
+    return $schedule;
+}
+}
+
+
 if(! function_exists('_generateBracket')){
     function _generateBracket($teams) {
         $matches = _singleElimination($teams);
@@ -223,6 +258,7 @@ if(! function_exists('_generateBracket')){
 if(! function_exists('_singleElimination')){
     function _singleElimination($teams) {
         $n = count($teams);
+        shuffle($teams);
         $matches = [];
     
         for ($i = 0; $i < $n / 2; $i++) {

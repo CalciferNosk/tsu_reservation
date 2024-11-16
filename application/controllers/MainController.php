@@ -204,7 +204,7 @@ class MainController extends CI_Controller
 		$event = [];
 		foreach ($event_list as $key => $value) {
 			array_push($event,(object)[
-				"title" => $value->EventName,
+				"title" => $value->EventName . ' : '. $value->Description,
 				"start" => $value->EventStart,
 				"end" => $value->EventEnd
 			]);
@@ -242,8 +242,90 @@ class MainController extends CI_Controller
 	}
 
 	public function generateGame(){
-		if(isset($_POST)){
-			
+		if(isset($_POST['game_mode'])){
+			$teams = $_POST['courses'];
+			$game = $_POST['game'];
+			$date_start = $_POST['start_date'];
+			$team_count = count($teams);
+
+			if($_POST['game_mode'] == 1){
+				$data['result'] = $this->SingleElimination($teams, $date_start);
+			}
+			if($_POST['game_mode'] == 2){
+				$data['result'] = $this->RoundRobin($teams, $date_start);
+			}
+			$data['store'] = $this->main_m->storeSchedule($data['result']['schedule'],$game);
+			$content_store = $this->main_m->storeContent($data['result']['display'], $game);
 		}
+
+		echo json_encode($data);
+	}
+
+	private function RoundRobin($teams, $date_start){
+		$matches = _roundRobin($teams);
+		$result_test = '';
+		$matche_data = [];
+		$schedule = [];
+		$current_date = strtotime($date_start);
+		$matches_per_day = 2;
+		$match_count = 0;
+	
+		foreach ($matches as $key => $match) {
+			if($match['team1'] == $match['team2']) continue;
+			$display = "Match: {$match['team1']} vs {$match['team2']}<br>";
+			$result_test .= $display;
+			array_push($matche_data, $match['team1'] . ' vs '. $match['team2'] );
+	
+			// Add match to schedule
+			$date = date('Y-m-d', $current_date);
+			if (!isset($schedule[$date])) {
+				$schedule[$date] = [];
+			}
+			$schedule[$date][] = $match;
+	
+			// Increment date if we've reached the matches per day limit
+			$match_count++;
+			if ($match_count >= $matches_per_day) {
+				$current_date += 86400; // add 1 day
+				$match_count = 0;
+			}
+		}
+	
+		return ["display" => $result_test, "matches" => $matche_data, "schedule" => $schedule];
+	}
+	private function SingleElimination($teams, $date_start)
+	{
+		$bracket = _generateBracket($teams);
+		$result_test = '';
+		$matche_data = [];
+		shuffle($bracket['matches']); // Randomize the order of the matches
+		$schedule = [];
+		$current_date = strtotime($date_start);
+		$matches_per_day = 2;
+	
+		foreach ($bracket['matches'] as $match) {
+			if($match['team1'] == $match['team2']) {
+				$display = "Match: {$match['team1']} - waiting <br>";
+				$result_test .= $display;
+			}else{
+				$display = "Match: {$match['team1']} vs {$match['team2']}<br>";
+				$result_test .= $display;
+				array_push($matche_data, $match['team1'] . '-' . $match['team2']);
+	
+				// Add match to schedule
+				$date = date('Y-m-d', $current_date);
+				if (!isset($schedule[$date])) {
+					$schedule[$date] = [];
+				}
+				$schedule[$date][] = $match;
+	
+				// Increment date if we've reached the matches per day limit
+				if (count($schedule[$date]) >= $matches_per_day) {
+					$current_date += 86400; // add 1 day
+				}
+			}
+		}
+	
+		return ["display" => $result_test, "matches" => $matche_data, "schedule" => $schedule];
 	}
 }

@@ -20,6 +20,8 @@
         </div>
         <!-- Description -->
         <div>
+          <h5><b><?= $value->ContentTitle ?></b></h5>
+          <br>
           <p>
             <?= $value->Description ?>
           </p>
