@@ -43,7 +43,7 @@ if( ! function_exists('_getUserFullName')){
         
        $CI->load->model('MainModel','main_m');
        
-       $fullname = $CI->main_m->getUserFullName($username)->pevent;
+       $fullname = $CI->main_m->getUserFullName($username)->name;
 
         return $fullname;
     }
