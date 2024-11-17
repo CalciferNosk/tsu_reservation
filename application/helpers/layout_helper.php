@@ -43,7 +43,7 @@ if( ! function_exists('_getUserFullName')){
         
        $CI->load->model('MainModel','main_m');
        
-       $fullname = $CI->main_m->getUserFullName($username)->name;
+       $fullname = $CI->main_m->getUserFullName($username)->pevent;
 
         return $fullname;
     }
@@ -471,6 +471,21 @@ if(!function_exists('_getAllCourses')){
  
         return  $courses;
      
+    }
+
+
+}
+
+if( ! function_exists('_getEventDataById')){
+
+    function _getEventDataById($event_id)
+    {
+
+     $CI =& get_instance();
+       $CI->load->model('MainModel','main_m');
+       $concern = $CI->main_m->getEventDataById($event_id);
+
+       return  $concern;
     }
 
 

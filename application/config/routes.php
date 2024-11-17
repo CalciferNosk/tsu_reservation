@@ -60,6 +60,7 @@ $route['reserve-event-slot'] = 'MainController/reserveEventSlot';
 # action button
 $route['delete-event'] = 'MainController/deleteEvent';
 $route['add-event'] = 'EventController/addEvent';
+$route['update-event'] = 'EventController/updateEvent';
 
 
 #event module
@@ -82,6 +83,7 @@ $route['update-details']    = 'MainController/updateDetails';
 $route['generate-game'] = 'MainController/generateGame';
 
 
+
 $route['calendar'] = 'MainController/getCalendar';
 $route['test'] = 'TesterController/dump';
 
@@ -89,6 +91,10 @@ $route['test'] = 'TesterController/dump';
 $route['create-concern'] = 'MainController/createConcern';
 $route['get-all-my-concerns'] = 'MainController/getAllMyConcerns';
 $route['view-concern/(:num)'] = 'MainController/viewConcern/$1';
+
+#report 
+$route['report-view'] = 'ReportController/index';
+$route['get-attendance']= 'ReportController/getAttendance';
 
 #admin 
 $route['admin/login'] = 'AdminController/login';

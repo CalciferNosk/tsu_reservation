@@ -10,13 +10,14 @@ class MainModel extends CI_Model
     protected $tbl_event_list = "tbl_event_list";
     protected $tbl_event_type = "tbl_event_type";
     protected $tbl_event_location = "tbl_event_location";
-    protected $tbl_event_attendees = "tbl_event_attendees";
+    // protected $tbl_event_attendees = "tbl_event_attendees";
     protected $tbl_workgroup = "tbl_workgroup";
     protected $tbl_workgruop_access = "tbl_workgruop_access";
     protected $tbl_event_bookmark = "tbl_event_bookmark";
     protected $tbl_concern_data = "tbl_concern_data";
     protected $tbl_concern_category = "tbl_concern_category";
     protected $tbl_concern_status = "tbl_concern_status";
+    protected $tbl_event_log = "tbl_event_log";
     public function __construct()
     {   
         $this->max_concat = $this->db->query("SET SESSION group_concat_max_len = 18446744073709551615;");
@@ -120,7 +121,7 @@ class MainModel extends CI_Model
 
     public function getAttendees($eventId){
 
-        $sql = "SELECT * FROM {$this->tbl_event_attendees} WHERE EventId = {$eventId} AND DeletedTag = 0";
+        $sql = "SELECT * FROM {$this->tbl_event_log} WHERE EventId = {$eventId} AND DeletedTag = 0";
    
         $result = $this->db->query($sql)->result_object();
         foreach ($result as $key => $value) {
@@ -138,7 +139,7 @@ class MainModel extends CI_Model
         'EventReserveDate' => date('Y-m-d H:i:s')
     ];
 
-    return $this->db->insert($this->tbl_event_attendees,$data);
+    return $this->db->insert($this->tbl_event_log,$data);
    }
 
    public function getWorkgroupAccess($workgroup_id){
@@ -157,7 +158,7 @@ class MainModel extends CI_Model
                     {$this->tbl_event_list} el  on a.EventId = el.EventId
                     
                 WHERE
-                    a.Username = '{$Username}' AND a.DeletedTag = 0
+                    a.Username = '{$Username}' AND a.DeletedTag = 0 AND el.DeletedTag = 0
                     
                 ORDER BY el.EventStart ";
         return $this->db->query($get_attendees)->result_object();
@@ -279,9 +280,23 @@ class MainModel extends CI_Model
         'Description' => $content,
         'PostCreatedby' => $_SESSION['username'],
         'Createdby' => $_SESSION['username'],
+        'ContentImage' => $game.'.jpg'
     ];
 
     $result = $this->db->insert($this->tbl_content,$data);
     return $result;
+  }
+
+
+  public function getWeeklyData(){
+
+    $sql = "SELECT * FROM {$this->tbl_event_log} WHERE Username = '{$_SESSION['username']}'";
+    return $this->db->query($sql)->result_object();
+  }
+
+  public function getEventDataById($id){
+
+    $sql = "SELECT * FROM {$this->tbl_event_list} WHERE EventId = {$id}";
+    return $this->db->query($sql)->row();
   }
 }

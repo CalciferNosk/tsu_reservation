@@ -10,6 +10,7 @@ class EventModel extends CI_Model
     protected $tbl_event_attendees_log = 'tbl_event_attendees_log';
     protected $tbl_event_staff = 'tbl_event_staff';
     protected $tbl_event_bookmark = "tbl_event_bookmark";
+    protected $tbl_event_log = 'tbl_event_log';
 
     public function __construct()
     {
@@ -42,18 +43,21 @@ class EventModel extends CI_Model
   }
   public function validateStudentEvent($event_id,$username){
 
-    $sql = "SELECT count(1) as login_count FROM {$this->tbl_event_attendees_log} WHERE EventId = {$event_id} AND Username = '{$username}' AND DeletedTag = 0";
+    $sql = "SELECT * FROM {$this->tbl_event_log} WHERE EventId = {$event_id} AND Username = '{$username}' AND DeletedTag = 0 
+    ";
     $query = $this->db->query($sql);
-    return $query->row()->login_count;
+    return $query->row();
   }
   public function timeInStudentEvent($event_id,$username){
     $data = [
       "Username" => $username,
-      "GeneratedId" => date('YmdHis'),
-      "EventId" => $event_id
+      // "GeneratedId" => date('YmdHis'),
+      "EventId" => $event_id,
+      'TimeInLog' => date('Y-m-d H:i:s')
     ];
 
-    $store = $this->db->insert($this->tbl_event_attendees_log, $data);
+    $store = $this->db->insert($this->tbl_event_log, $data);
+
 
     return $store ;
   }
@@ -69,6 +73,7 @@ class EventModel extends CI_Model
     $sql = "SELECT count(1) as staff_count FROM {$this->tbl_event_staff} WHERE Username = '{$username}' AND EventId = {$event_id} AND DeletedTag = 0";
     return $this->db->query($sql)->row()->staff_count;
   }
+  
 
   public function checkUserLog($event_id,$username,$time_event){
     $sql = "SELECT count(1) as login_count FROM {$this->tbl_event_attendees_log} WHERE EventId = {$event_id} AND Username = '{$username}' AND TimeEvent = '{$time_event}' AND DeletedTag = 0";
@@ -76,8 +81,13 @@ class EventModel extends CI_Model
   }
   public function timeLog($data){
 
-    $store = $this->db->insert($this->tbl_event_attendees_log, $data);
+    $store = $this->db->insert($this->tbl_event_log, $data);
     return $store ;
+  }
+  public function update_log($event_id,$username){
+    $today = date('Y-m-d H:i:s');
+    $update = "UPDATE `tsu_reservation`.`tbl_event_log` SET `TimeOutLog` = '{$today}' WHERE `EventId` = '{$event_id}'AND Username = '{$username}'";
+    return $this->db->query($update);
   }
 
   public function getEventPhoto($event_id){
@@ -98,5 +108,10 @@ class EventModel extends CI_Model
     $bookmark = $bookmark == 1 ? 0 : 1;
     $sql = "UPDATE {$this->tbl_event_bookmark} SET DeletedTag = {$bookmark} WHERE EventId = {$event_id} AND Username = '{$user_id}' ";
     return $this->db->query($sql);
+   }
+
+   public function updateEvent($data,$event_id){
+    $this->db->where('EventId', $event_id);
+    return $this->db->update($this->tbl_event_list, $data);
    }
 }

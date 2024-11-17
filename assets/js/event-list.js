@@ -60,6 +60,7 @@ $(document).ready(function () {
 		var edit_reservation_end = $("#edit-event-reservation_end").val();
 		var edit_event_description = $("#edit-event-description").val();
 		var edit_event_id = $("#edit-event-id").val();
+		var edit_event_details = $("#edit-event-details").summernote("code");
 
 		var formdata = new FormData();
 		formdata.append("edit_name", edit_event_name);
@@ -72,7 +73,7 @@ $(document).ready(function () {
 		// formdata.append("edit_reservation_end", edit_reservation_end);
 		formdata.append("edit_event_description", edit_event_description);
 		formdata.append("edit_event_id", edit_event_id);
-
+		formdata.append("edit_event_details", edit_event_details);
 		Swal.fire({
 			title: "Are you sure?",
 			text: "Please confirm to Update event!",

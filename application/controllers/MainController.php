@@ -49,6 +49,9 @@ class MainController extends CI_Controller
 			}
 			$data['event_list'] = $event_data;
 			$data['my_event'] = $this->main_m->getMyEvent($result->Username);
+			$data['weekly_data'] = $this->main_m->getWeeklyData();
+
+			// var_dump($data['weekly_data']);die;
 			
 		}
 		// var_dump('<pre>',$data['event_list']);die;

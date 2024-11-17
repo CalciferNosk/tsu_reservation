@@ -57,13 +57,13 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                 </i>
 
                 <span style="float: right;">
-                    <?php if ($_SESSION['role'] == 2):  ?>
+                    <?php if (in_array($_SESSION['role'],[2,3])):  ?>
                         <select name="time" id="time" class="form-group">
                             <option value="IN">IN</option>
                             <option value="OUT">OUT</option>
                         </select>
                     <?php endif ?>
-                    <?php if (_getDateBetween($event->EventStart, $event->EventEnd) == 1 || $_SESSION['role'] == 2):
+                    <?php if (_getDateBetween($event->EventStart, $event->EventEnd) == 1 || in_array($_SESSION['role'],[2,3])):
                         $token = strtoupper(hash("sha256", $_SESSION['username'] . date("Y-m-d")))
                     ?>
                         <div class="btn-group shadow-0 mb-2">
@@ -78,7 +78,7 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <li><a target="_blank" class="dropdown-item" href="<?= BASE_URL_SSL ?>/scan-qr/<?= $event->EventId ?>"><i class="fa-regular fa-square"></i>Scan QR</a></li>
-                                <?php if (_getStaffEvent($_SESSION['username'], $event->EventId)):  ?>
+                                <?php if (in_array($_SESSION['role'],[2,3])):  ?>
                                     <li><a class="dropdown-item" href="#" id="organizer_qr"> <i class="fas fa-qrcode"></i> Staff QR</a></li>
                                 <?php else: ?>
                                     <li><a class="dropdown-item" href="#" id="generate"> <i class="fas fa-qrcode"></i> Generate QR</a></li>

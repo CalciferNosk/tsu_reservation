@@ -41,10 +41,10 @@
 </style>
 
 <body>
-    <?php if (isset($_GET['result']) == 1) : ?>
+    <?php if ($result== 1) : ?>
         <div class="success-message">
             <h2>Success!</h2>
-            <p><?= $_GET['message'] ?></p>
+            <p><?= $mssg ?></p>
             <a class="close-button" type="button" href="<?= base_url() ?>">Home</button>
         </div>
     <?php else: ?>
@@ -52,7 +52,7 @@
             <br>
             <br>
             <h2>Invalid Link</h2>
-            <p><?= $_GET['message'] ?></p>
+            <p><?= $mssg ?></p>
             <a class="" type="button" href="<?= base_url() ?>">Home</button>
         </center>
     <?php endif  ?>

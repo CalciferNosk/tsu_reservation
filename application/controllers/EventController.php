@@ -45,81 +45,43 @@ class EventController extends CI_Controller
     }
     public function qrStaffEvent($time_data , $event_id){
         $username = base64_decode($_GET['username']);
-        $valid_user = (int)_getStaffEvent($username,$event_id) ? 1 : 0;
+        $valid_user = in_array( _getUserRole($username),['Organizer','Staff']);
         $check_decode = $username == 'undefined' ? 1 : 0;
+
+        // var_dump($valid_user);die;
         if($check_decode == 1 || $valid_user == 0){
             $message = "invalid link";
             redirect("invalid-link?result=0&message=$message");
             exit();
         }
-        $username = $_SESSION['username'];
-        $check_log_in = (int) $this->event_m->checkUserLog($event_id, $username, 'IN');
-        if ($time_data == 'IN') {
-           
-            if (empty($check_log_in)) {
-                $data = [
-                    "EventId" => $event_id,
-                    "Username" => $username,
-                    "GeneratedId" => date('YmdHis'),
-                    "TimeEvent" => $time_data
-                ];
-                $store = $this->event_m->timeLog($data);
-                if ($store) {
-                    $message = "Successfully Time In";
-                    redirect("success-time-inresult=0&message=$message");
-                    exit();
-                } else {
-                    $message = "Failed Time In";
-                    redirect("invalid-link?result=1&message=$message");
-                    exit();
-                }
-            } else {
-                $message = "Already Time IN";
-                redirect("invalid-link?result=0&message=$message");
-                exit();
-            }
-       }
-       else if($time_data == 'OUT'){
-        $check_log_out = (int) $this->event_m->checkUserLog($event_id, $username, 'OUT');
+        $data['result'] = 0 ;
+        $data['mssg'] = '';
+        
+        $validateStudentEvent = $this->event_m->validateStudentEvent($event_id, $_SESSION['username']);
 
-        if(empty($check_log_in)){
-            $message = "Please Time In First";
-            redirect("invalid-link?result=0&message=$message");
-            exit();
-        }else{
-            $check_log_out = (int) $this->event_m->checkUserLog($event_id, $username, 'OUT');
-            if(empty($check_log_out)){
-                $data = [
-                    "EventId" => $event_id,
-                    "Username" => $username,
-                    "GeneratedId" => date('YmdHis'),
-                    "TimeEvent" => $time_data
-                ];
-                $store = $this->event_m->timeLog($data);
-                if ($store) {
-                    $message = "Successfully Time Out";
-                    redirect("invalid-link?result=1&message=$message");
-                    exit();
-                } else {
-                    $message = "Failed Time Out";
-                    redirect("invalid-link?result=0&message=$message");
-                    exit();
-                }
+        if (empty($validateStudentEvent) ) {
+            $data = [
+                "Username" => $_SESSION['username'],
+                // "GeneratedId" => date('YmdHis'),
+                "EventId" => $event_id,
+                'TimeInLog' => date('Y-m-d H:i:s')
+            ];
+            $store = $this->event_m->timeLog($data);
+            $data['result'] = $store ;
+            $data['mssg'] = $store == 1 ? 'Success time in' : 'Something went wrong';
+        }
+        else{
+            if($validateStudentEvent->TimeOutLog == null && !empty($validateStudentEvent) && $time_data == 'OUT'){
+                $update_log = $this->event_m->update_log($event_id,$_SESSION['username']);
+               $data['result'] =  $update_log ;
+                $data['mssg'] =  $update_log == 1 ? 'Success time out' : 'Something went wrong';
             }
             else{
-                $message = "Already Time Out";
-                redirect("invalid-link?result=0&message=$message");
-                exit();
+                $data['mssg'] = "already time {$time_data} to this event";
             }
-        }
+        } 
 
-       }
-       else{
-        $message = "Invalid Data";
-        redirect("invalid-link?result=0&message=$message");
-        exit();
-       }
-       var_dump($time_data);die;
+       $this->load->view('ScannerResult/TImeInEventView',$data);
     }
     public function timeInStudentEvent($event_id){
 
@@ -128,27 +90,36 @@ class EventController extends CI_Controller
             redirect("invalid-link?message=$message");
             exit();
         }
+        // var_dump($_GET);die;    
         $username = base64_decode($_GET['username']);
         $check_decode = $username == 'undefined' ? 1 : 0;
         $check_valid_user = $username == $_SESSION['username'] ? 1 : 0;
         $message = "invalid link"; 
         $result = 0;
-        // $valid_user = in_array((int)_checkUserDatByUsername($username,'Role'),[1,2,3]) ? 1 : 0;
-        $valid_user = (int)_getStaffEvent($username,$event_id) ? 1 : 0;
+        $valid_user =  in_array($_SESSION['role'],[2,3]);
         $check_valid_user = 0;
-        // var_dump(!$check_decode ,!$check_valid_user ,$valid_user == 1);die;
+
+
         if(!$check_decode && !$check_valid_user && $valid_user == 1){
-            $validateStudentEvent = $this->event_m->validateStudentEvent($event_id, $username); 
+            $validateStudentEvent = $this->event_m->validateStudentEvent($event_id, $username);            
             $message = "Already Time In";
             if(empty($validateStudentEvent)){
-                $time_in = $this->event_m->timeInStudentEvent($event_id,$_SESSION['username']);
-                $result += $time_in;
-                $message =$result > 0 ? "Time in  success" : "Time in failed";
+                $store = $this->event_m->timeInStudentEvent($event_id,$username);
+                $data['result'] = $store ;
+                $data['mssg'] = $store == 1 ? 'Success time in' : 'Something went wrong';
+                echo 'time in' . $time_in;
             }
+           else if($validateStudentEvent->TimeOutLog == null && !empty($validateStudentEvent)){
+            $update_log = $this->event_m->update_log($event_id,$username);
+            $data['result'] =  $update_log ;
+            $data['mssg'] =  $update_log == 1 ? 'Success time out' : 'Something went wrong';
+            }
+            
         }else{
             $message = 'Only Generated by staff is allowed';
         }
-
+        die;
+        // var_dump($result);die;
         $data['message'] =  $message;
         $data['result'] = $result;
         if($result == 1){
@@ -162,6 +133,8 @@ class EventController extends CI_Controller
 
     public function successTimeIn(){
         $data['result'] =1;
+
+        // var_dump($data);die;
         $this->load->view('ScannerResult/TImeInEventView', $data);
     }
     public function invalidLink(){
@@ -242,5 +215,24 @@ class EventController extends CI_Controller
        }
        echo json_encode($result);
 
+    }
+
+    public function updateEvent(){
+
+      $data = [
+        "EventName" => $_POST['edit_name'],
+        "Description" => $_POST['edit_event_description'],
+        "EventLocationId" => $_POST['edit_location'],
+        "EventOrganizer" => $_POST['edit_organizer'],
+        "EventStart" => $_POST['edit_event_start'],
+        "EventEnd"    => $_POST['edit_event_end'],
+        "EventStart" => $_POST['edit_event_start'],
+        "UpdatedBy" => $_SESSION['username'],
+        "UpdatedDate" => date('Y-m-d H:i:s'),
+      ];
+      $event_id = $_POST['edit_event_id'];
+
+      $result = $this->event_m->updateEvent($data,$event_id);
+      echo json_encode($result);
     }
 }

@@ -21,6 +21,9 @@
    <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.5.0/js/rowReorder.dataTables.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.js"></script>
    <script type="text/javascript" src="https://cdn.datatables.net/responsive/3.0.3/js/responsive.dataTables.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/2.1.8/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/2.1.8/js/buttons.html5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/2.1.8/js/buttons.print.min.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
  
 <script src="<?php echo base_url('assets/js/toastify.min.js'); ?>"></script>

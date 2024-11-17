@@ -92,11 +92,11 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                         </li>
                     <?php endif; ?>
                     <li class="nav-item">
-                        <a class="nav-link tab-link" data-content="contact" id="nav_contact" s href="#">Contact Us</a>
+                        <a class="nav-link tab-link" data-content="contact" id="nav_contact"  href="#">Contact Us</a>
                     </li>
                     <?php if ($_SESSION['role'] == 2): ?>
                         <li class="nav-item">
-                            <a class="nav-link tab-link" data-content="report" id="nav_report" s href="#">Generate Report</a>
+                            <a class="nav-link tab-link" data-content="report" id="nav_report"  href="<?= base_url() ?>report-view">Generate Report</a>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -269,17 +269,35 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                             </center>
                             <hr>
                             <div id="home_event_list_join">
-                                <ol class="list-group list-group-light ">
-                                    <?php foreach ($my_event as $key => $value): ?>
-                                        <li class="list-group-item d-flex justify-content-between align-items-start" style="padding: 2px;">
-                                            <div class="ms-2 me-auto">
-                                                <div class="fw-bold" style="font-size: 12px;"><?= $value->EventName ?></div>
-                                                <span style="font-size: 10px;"><?= date('M j, Y ', strtotime($value->EventStart)) ?></span>
-                                            </div>
-                                            <a target="_blank" href="<?= base_url() ?>view-event/<?= $value->EventId ?>"><span class="badge badge-primary rounded-pill">Time in</span></a>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ol>
+                                <?php
+                                if (empty($weekly_data)) {
+                                    echo "<cente> No data found </center>";
+                                } else {
+                                ?>
+                                    <ol class="list-group list-group-light ">
+
+                                        <?php
+
+                                        foreach ($weekly_data as $key => $value): ?>
+                                            <li class="list-group-item d-flex justify-content-between align-items-start row" style="padding: 2px;">
+                                                <div class="ms-2 me-auto col-md-4">
+                                                    <div class="fw-bold" style="font-size: 12px;"><?= _getEventDataById($value->EventId)->EventName ?></div>
+                                                    <span style="font-size: 10px;"><?= date('M j, Y ', strtotime($value->CreatedDate)) ?></span>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <?php if (!empty($value->TimeInLog)): ?>
+                                                        <span class="badge badge-success rounded-pill">Time in | <?= date('h:i:s', strtotime($value->TimeInLog)) ?></span>
+                                                    <?php endif; ?>
+                                                    <br>
+                                                    <?php if (!empty($value->TimeOutLog)): ?>
+                                                        <span class="badge badge-primary rounded-pill">Time Out | <?= date('h:i:s', strtotime($value->TimeOutLog)) ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ol>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -488,7 +506,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                                     </div>
                                                     <div class="col-md-12 mb-3">
                                                         <Label>Full Details Description</Label>
-                                                        <textarea class="summernote" id="edir-event-details" name="edit-event-details"></textarea>
+                                                        <textarea class="summernote" id="edit-event-details" name="edit-event-details"></textarea>
                                                     </div>
 
                                                     <input type="hidden" name="edit-event-id" id="edit-event-id">
@@ -604,6 +622,10 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
             </div>
             <div class="content_div" id="calendar_content" style="display: none;">
                 <center><a href="<?= base_url('calendar') ?>">Got to Calendar</a></center>
+            </div>
+
+            <div class="content_div" id="report_content" style="display: none;">
+               
             </div>
             <div class="content_div" id="game_content" style="display: none;">
                 <div class="container-fluid">
@@ -789,25 +811,25 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                    url: base_url + "generate-game",
-                    type: "POST",
-                    data: {
-                        courses: courses,
-                        game_mode: game_mode,
-                        game: game,
-                        start_date: start_date,
-                        match_per_day: match_per_day
-                    },
-                    dataType: "json",
-                    success: function(response) {
-                        $('#generateGame').hide();
-                        console.log(response);
-                        $('#result_match').html(response.result.display);
-                    }
-                })
+                            url: base_url + "generate-game",
+                            type: "POST",
+                            data: {
+                                courses: courses,
+                                game_mode: game_mode,
+                                game: game,
+                                start_date: start_date,
+                                match_per_day: match_per_day
+                            },
+                            dataType: "json",
+                            success: function(response) {
+                                $('#generateGame').hide();
+                                console.log(response);
+                                $('#result_match').html(response.result.display);
+                            }
+                        })
                     }
                 });
-               
+
             })
 
 
