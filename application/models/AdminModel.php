@@ -34,4 +34,9 @@ class AdminModel extends CI_Model
     $query = $this->db->query($sql);
     return $query->result_object();
   }
+    public function updateUser($data){
+      
+      $this->db->where('id', $data['id']);
+      return $this->db->update($this->tbl_user, $data);
+    }
 }

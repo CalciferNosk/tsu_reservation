@@ -20,6 +20,8 @@ class TesterController extends CI_Controller {
 	 */
 	public function test()
 	{
+
+		var_dump(_getUserFullName($_SESSION['username']));die;
 		$bracket = [
 			'matches' => [
 				['CS', 'CED'],

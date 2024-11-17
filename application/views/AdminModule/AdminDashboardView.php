@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
         crossorigin="anonymous"></script>
 
-        
+
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.5.0/css/rowReorder.dataTables.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.dataTables.css">
@@ -40,7 +40,7 @@
                             class="fas fa-users fa-fw me-3"></i><span>Users</span></a>
                     <a href="#" class="list-group-item list-group-item-action py-2 nav-action" data-nav="event" data-mdb-ripple-init><i
                             class="fas fa-calendar fa-fw me-3"></i><span>Events</span></a>
-                            <a href="#" class="list-group-item list-group-item-action py-2 nav-action" data-nav="workgroup" data-mdb-ripple-init><i
+                    <a href="#" class="list-group-item list-group-item-action py-2 nav-action" data-nav="workgroup" data-mdb-ripple-init><i
                             class="fas fa-user-group fa-fw me-3"></i><span>Workgroup</span></a>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                         </ul>
                     </li>
 
-            
+
                     <li class="nav-item dropdown">
                         <a class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow" href="#" id="navbarDropdown" role="button"
                             data-mdb-dropdown-init aria-expanded="false">
@@ -154,7 +154,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between px-md-1">
                                     <div>
-                                        <h3 class="text-info"><?= $event_count?></h3>
+                                        <h3 class="text-info"><?= $event_count ?></h3>
                                         <p class="mb-0">Event Count</p>
                                     </div>
                                     <div class="align-self-center">
@@ -262,7 +262,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between px-md-1">
                                     <div>
-                                        <h3 class="text-success"><?= count($guest)?></h3>
+                                        <h3 class="text-success"><?= count($guest) ?></h3>
                                         <p class="mb-0">Guest Count</p>
                                     </div>
                                     <div class="align-self-center">
@@ -304,38 +304,38 @@
                         </thead>
                         <tbody>
                             <?php foreach ($all_user as $user) :  ?>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <img
-                                            src="<?=base_url()?>assets/user_profile/<?= $user->ProfilePhoto ?>"
-                                            alt=""
-                                            style="width: 45px; height: 45px"
-                                            class="rounded-circle" />
-                                        <div class="ms-3">
-                                            <p class="fw-bold mb-1"><?= empty($user->Fname) || empty($user->Lname) ? 'invalid user' :  strtoupper($user->Fname . ' ' . $user->Lname) ?></p>
-                                            <p class="text-muted mb-0"><?= $user->Username ?></p>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img
+                                                src="<?= base_url() ?>assets/user_profile/<?= $user->ProfilePhoto ?>"
+                                                alt=""
+                                                style="width: 45px; height: 45px"
+                                                class="rounded-circle" />
+                                            <div class="ms-3">
+                                                <p class="fw-bold mb-1"><?= empty($user->Fname) || empty($user->Lname) ? 'invalid user' :  strtoupper($user->Fname . ' ' . $user->Lname) ?></p>
+                                                <p class="text-muted mb-0"><?= $user->Username ?></p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="fw-normal mb-1"><?= $user->Email ?></p>
-                                    <p class="text-muted mb-0"><?= $user->CourseId ?></p>
-                                </td>
-                                <td>
-                                    <span class="badge badge-success rounded-pill d-inline">Active</span>
-                                </td>
-                                <td>
-                                    <?= _getUserRole($user->Username) ?></td>
-                                <td>
-                                    <button type="button" class="btn btn-link btn-sm btn-rounded edit-user" data-user="<?= base64_encode(json_encode($user)) ?>">
-                                        Edit Profile
-                                    </button>
-                                    <button type="button" class="btn btn-link btn-sm btn-rounded reset-password" data-username="<?= $user->Username ?>" data-sysid="<?= $user->id ?>">
-                                        reset password
-                                    </button>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        <p class="fw-normal mb-1"><?= $user->Email ?></p>
+                                        <p class="text-muted mb-0"><?= $user->CourseId ?></p>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-success rounded-pill d-inline">Active</span>
+                                    </td>
+                                    <td>
+                                        <?= _getUserRole($user->Username) ?></td>
+                                    <td>
+                                        <button type="button" class="btn btn-link btn-sm btn-rounded edit-user" data-user="<?= base64_encode(json_encode($user)) ?>">
+                                            Edit Profile
+                                        </button>
+                                        <button type="button" class="btn btn-link btn-sm btn-rounded reset-password" data-username="<?= $user->Username ?>" data-sysid="<?= $user->id ?>">
+                                            reset password
+                                        </button>
+                                    </td>
+                                </tr>
                             <?php endforeach ?>
                             <!-- <tr>
                                 <td>
@@ -407,207 +407,174 @@
 
             <section class="dashboard-content " id="dashboard-event" style="display:none">
                 <div class="row">
-                <table class=" nowrap" style="width:100%" id="event_table_list" >
-                                <thead class="bg-light table-light">
-                                    <tr>
-                                        <th class="th_class">EVENT NAME</th>
-                                        <th class="th_class">EVENT START</th>
-                                        <th class="th_class">ORGANIZER</th>
-                                        <th class="th_class">CAPACITY</th>
-                                        <th class="th_class">EVENT STATUS</th>
-                                        <th class="th_class">RESERVED END</th>
-                                        <th class="th_class">QUICK RESERVED</th>
-                                        <th class="th_class">ACTION</th>
-                                        <th class="th_class">Full Details</th>
+                    <table class=" nowrap" style="width:100%" id="event_table_list">
+                        <thead class="bg-light table-light">
+                            <tr>
+                                <th class="th_class">EVENT NAME</th>
+                                <th class="th_class">EVENT START</th>
+                                <th class="th_class">ORGANIZER</th>
+                                <!-- <th class="th_class">CAPACITY</th> -->
+                                <th class="th_class">EVENT STATUS</th>
+                                <!-- <th class="th_class">RESERVED END</th> -->
+                                <!-- <th class="th_class">QUICK RESERVED</th> -->
+                                <th class="th_class">ACTION</th>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($events as $key => $value) : ?>
-                                        <tr class=" <?= _getDateStatus($value->EventStart) == 1 ? 'hover_event_list_ongoing':'hover_event_list' ?>">
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1"><?= strtoupper($value->EventName) ?></p>
-                                                        <p class="text-muted mb-0"> <?= $value->Description ?></p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="ms-3">
-                                                        <p class="fw-normal mb-1">Start :<?= date('M j, Y hA', strtotime($value->EventStart));  ?> </p>
-                                                        <!-- <p class="fw-normal mb-1">End : <?= date('M j, Y', strtotime($value->EventEnd));  ?></p> -->
-                                                        <p class="text-muted mb-0">Location : <?= $value->EventLocationId ?></p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <img
-                                                        src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($value->EventOrganizer) ?>"
-                                                        alt=""
-                                                        style="width: 45px; height: 45px"
-                                                        class="rounded-circle shadow-sm" />
-                                                    <div class="ms-3">
-                                                        <p class="fw-bold mb-1"><?= strtoupper(_getUserFullName($value->EventOrganizer)) ?></p>
-                                                        <p class="text-muted mb-0"><?= _getUserRole($value->EventOrganizer) ?></p>
-                                                    </div>
-                                                </div>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($events as $key => $value) : ?>
+                                <tr class=" <?= _getDateStatus($value->EventStart) == 1 ? 'hover_event_list_ongoing' : 'hover_event_list' ?>">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="ms-3">
+                                                <p class="fw-bold mb-1"><?= strtoupper($value->EventName) ?></p>
+                                                <p class="text-muted mb-0"> <?= $value->Description ?></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="ms-3">
+                                                <p class="fw-normal mb-1">Start :<?= date('M j, Y hA', strtotime($value->EventStart));  ?> </p>
+                                                <!-- <p class="fw-normal mb-1">End : <?= date('M j, Y', strtotime($value->EventEnd));  ?></p> -->
+                                                <p class="text-muted mb-0">Location : <?= $value->EventLocationId ?></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img
+                                                src="<?= base_url() ?>assets/user_profile/<?= _getUserProfile($value->EventOrganizer) ?>"
+                                                alt=""
+                                                style="width: 45px; height: 45px"
+                                                class="rounded-circle shadow-sm" />
+                                            <div class="ms-3">
+                                                <p class="fw-bold mb-1"><?= strtoupper(_getUserFullName($value->EventOrganizer)) ?></p>
+                                                <p class="text-muted mb-0"><?= _getUserRole($value->EventOrganizer) ?></p>
+                                            </div>
+                                        </div>
 
 
-                                            </td>
-                                            <td>
-                                                <center><?= 0 ?></center>
-                                            </td>
-                                            <td>
-                                                <?= _getStatusBadge($value) ?>
-                                            </td>
-                                            <td>
-                                                <?php if (_getDateStatus($value->EventReservationEnd)  ==  0):
+                                    </td>
 
-                                                    if (_getDateStatus($value->EventReservationStart) == 1):
-                                                ?>
-                                                        <center><?= date('M j, Y', strtotime($value->EventReservationEnd));  ?></center>
-                                                    <?php
-                                                    else:
-                                                    ?>
-                                                        <center>--</center>
-                                                    <?php
-                                                    endif;
-                                                else: ?>
-                                                    <center>
-                                                        <button type="button" class="btn btn-secondary btn-sm btn-rounded">
-                                                            Closed
-                                                        </button>
-                                                    </center>
-                                                <?php endif; ?>
+                                    <td>
+                                        ---
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-edit event-edit event-action" data-mdb-ripple-init
+                                            data-mdb-tooltip-init
+                                            data-mdb-html="true"
+                                            title="Edit" data-rowdata="<?= base64_encode(json_encode($value)) ?>"></i>
+                                        <i class="fas fa-trash event-delete event-action" data-mdb-ripple-init
+                                            data-mdb-tooltip-init
+                                            data-mdb-html="true"
+                                            title="delete" data-eventid="<?= $value->EventId ?>"></i>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
 
-                                            </td>
-                                            <td>
-                                                ---
-                                            </td>
-                                            <td>
-                                                <?php if (in_array($_SESSION['admin_username'], [$value->EventOrganizer, $value->CreatedBy]) && _getDateStatus($value->EventReservationEnd)  ==  0): ?>
-                                                    <i class="fas fa-edit event-edit event-action" data-mdb-ripple-init
-                                                        data-mdb-tooltip-init
-                                                        data-mdb-html="true"
-                                                        title="Edit" data-rowdata="<?= base64_encode(json_encode($value)) ?>"></i>
-                                                    <i class="fas fa-trash event-delete event-action" data-mdb-ripple-init
-                                                        data-mdb-tooltip-init
-                                                        data-mdb-html="true"
-                                                        title="delete" data-eventid="<?= $value->EventId ?>"></i>
-                                                <?php else: ?>
-                                                    <center>--</center>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <a href="<?= base_url() ?>view-event/<?= $value->EventId ?>" target="frame">
-                                                    <i class="fas fa-eye event-view event-action" data-mdb-ripple-init
-                                                        data-mdb-tooltip-init
-                                                        data-mdb-html="true"
-                                                        title="View"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-
-                                </tbody>
-                            </table>
+                        </tbody>
+                    </table>
                 </div>
             </section>
             <section class="dashboard-content " id="dashboard-workgroup" style="display:none">
                 <div class="row">
-                  <table class="table display">
-                    <thead>
-                      <tr>
-                        <th scope="col">Workgroup</th>
-                        <th scope="col">Created By</th>
-                        <th scope="col">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($workgroup as $value):  ?>
+                    <table class="table display">
+                        <thead>
                             <tr>
-                                <td><?= $value->WorkgroupName ?></td>
-                                <td><?= $value->CreatedBy ?></td>
-                                <td><button>Edit</button></td>
+                                <th scope="col">Workgroup</th>
+                                <th scope="col">Created By</th>
+                                <th scope="col">Action</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($workgroup as $value):  ?>
+                                <tr>
+                                    <td><?= $value->WorkgroupName ?></td>
+                                    <td><?= $value->CreatedBy ?></td>
+                                    <td><button class="btn btn-primary">Edit</button></td>
+                                </tr>
                             <?php endforeach;  ?>
-                    </tbody>
-                  </table>
+                        </tbody>
+                    </table>
                 </div>
             </section>
         </div>
 
         <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#EditUser" id="btn_edit_user" hidden>
-</button>
+        <button type="button" class="btn btn-primary" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#EditUser" id="btn_edit_user" hidden>
+        </button>
 
-<!-- Modal -->
-<div class="modal fade" id="EditUser" tabindex="-1" aria-labelledby="EditUserLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="EditUserLabel">Edit User</h5>
-        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row m-1">
-            <div class="col-md-3">
-                <div class="form-outline " data-mdb-input-init>
-                    <input type="text" id="fname" name="fname" class="form-control user_setup_input" />
-                    <label class="form-label" for="fname"><span style="color : red">*</span> First Name</label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-outline " data-mdb-input-init>
-                    <input type="text" id="lname" name="lname" class="form-control user_setup_input" />
-                    <label class="form-label" for="lname"><span style="color : red">*</span> Last Name</label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-outline " data-mdb-input-init>
-                    <input type="text" id="email" name="email" class="form-control user_setup_input" />
-                    <label class="form-label" for="email"><span style="color : red">*</span> Email</label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-outline " data-mdb-input-init>
-                    <input type="text" id="username" name="username" class="form-control user_setup_input" />
-                    <label class="form-label" for="username"><span style="color : red">*</span> Username</label>
+        <!-- Modal -->
+        <div class="modal fade" id="EditUser" tabindex="-1" aria-labelledby="EditUserLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EditUserLabel">Edit User</h5>
+                        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row m-1">
+                            <div class="col-md-3">
+                                <div class="form-outline " data-mdb-input-init>
+                                    <input type="text" id="edit-fname" name="fname" class="form-control user_setup_input" />
+                                    <label class="form-label" for="fname"><span style="color : red">*</span> First Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-outline " data-mdb-input-init>
+                                    <input type="text" id="edit-mname" name="mname" class="form-control user_setup_input" />
+                                    <label class="form-label" for="mname"><span style="color : red">*</span> Middle Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-outline " data-mdb-input-init>
+                                    <input type="text" id="edit-lname" name="lname" class="form-control user_setup_input" />
+                                    <label class="form-label" for="lname"><span style="color : red">*</span> Last Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-outline " data-mdb-input-init>
+                                    <input type="text" id="edit-username" name="username" class="form-control user_setup_input" />
+                                    <label class="form-label" for="username"><span style="color : red">*</span> Username</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-1 mt-2">
+                            <div class="col-md-6">
+                                <div class="form-outline " data-mdb-input-init>
+                                    <input type="email" id="edit-email" name="email" class="form-control user_setup_input" />
+                                    <label class="form-label" for="email"><span style="color : red">*</span> Email</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select user_setup_input" name="gender" id="edit-gender" aria-label="Select gender">
+                                    <option disabled selected>-- Select Gender --</option>
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                    <option value="3">Nonbinary and/or Intersex.</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                            <select class="form-select user_setup_input" name="role" id="edit-role" aria-label="Select role">
+                                    <option disabled selected>-- Select Role --</option>
+                                    <option value="2">Organizer</option>
+                                    <option value="3">Staff</option>
+                                    <option value="4">Professor</option>
+                                    <option value="5">Student</option>
+                                    <option value="6">Guest</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="save-update" data-mdb-ripple-init>Save changes</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="row m-1 mt-2">
-            <div class="col-md-6">
-                <div class="form-outline " data-mdb-input-init>
-                    <input type="email" id="email" name="email" class="form-control user_setup_input" />
-                    <label class="form-label" for="email"><span style="color : red">*</span> Email</label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-outline " data-mdb-input-init>
-                    <input type="text" id="lname" name="lname" class="form-control user_setup_input" />
-                    <label class="form-label" for="lname"><span style="color : red">*</span> Last Name</label>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-outline " data-mdb-input-init>
-                    <input type="text" id="email" name="email" class="form-control user_setup_input" />
-                    <label class="form-label" for="email"><span style="color : red">*</span> Email</label>
-                </div>
-            </div>
-          
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" data-mdb-ripple-init>Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
     </main>
     <!--Main layout-->
 
@@ -617,7 +584,11 @@
     <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.5.0/js/rowReorder.dataTables.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/3.0.3/js/responsive.dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- MDB -->
+     <script>
+        var base_url = `<?php base_url()  ?>`;
+     </script>
     <script type="text/javascript" src="<?= base_url(); ?>assets/js/mdb.umd.min.js"></script>
     <!-- Custom scripts -->
     <script type="text/javascript" src="<?= base_url(); ?>assets/js/admin.js"></script>

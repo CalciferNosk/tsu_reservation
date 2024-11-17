@@ -356,7 +356,6 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
 
                                             </td>
                                             <td>
-
                                                 <?php if (_getDateStatus($value->EventReservationEnd)  ==  1):  ?>
                                                     <button type="button" class="btn btn-primary btn-sm btn-rounded view_event" data-start="<?= _getDateStatus($value->EventReservationStart) ?>" data-status="0" data-end="<?= _getDateStatus($value->EventReservationEnd) ?>" data-rowdata="<?= base64_encode(json_encode($value)) ?>" data-reservedata="<?= $value->ReserveData ?>" data-eventid="<?= $value->EventId ?>">
                                                         Participants
@@ -391,13 +390,9 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
-
                                 </tbody>
                             </table>
                                 <!-- old reservation table end  -->
-
-
-
                             <center>
                                 <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#viewEventModal" data-mdb-backdrop="static" hidden>
 

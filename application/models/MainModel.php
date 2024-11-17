@@ -68,7 +68,7 @@ class MainModel extends CI_Model
                 LEFT JOIN  $this->tbl_workgroup wg on wg.wid = u.Role
 
                 WHERE u.Username = '{$username}'";
-
+    
                 // var_dump($sql);
         
         return $this->db->query($sql)->row();

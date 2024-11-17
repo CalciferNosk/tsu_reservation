@@ -100,6 +100,7 @@ $route['get-attendance']= 'ReportController/getAttendance';
 $route['admin/login'] = 'AdminController/login';
 $route['admin/auth']    = 'AdminController/auth';
 $route['admin/dashboard'] = 'AdminController/dashboard';
+$route['admin/update-user'] = 'AdminController/updateUser';
 
 
 

@@ -42,10 +42,10 @@ if( ! function_exists('_getUserFullName')){
         $CI =& get_instance();
         
        $CI->load->model('MainModel','main_m');
-       
-       $fullname = $CI->main_m->getUserFullName($username)->name;
+        
+       $fullname = $CI->main_m->getUserFullName($username);
 
-        return $fullname;
+        return $fullname ? $fullname->name : '';
     }
 }
 

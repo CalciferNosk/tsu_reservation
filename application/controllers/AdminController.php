@@ -77,7 +77,12 @@ class AdminController extends CI_Controller {
             redirect('admin/login');
         }
     }
+    public function updateUser()
+{
+   $result =  $this->admin_m->updateUser($_POST);
 
+   echo json_encode($result);
+}
     public function resetLock(){
         $_SESSION['login_tries'] = 0;
         echo 'reset success';

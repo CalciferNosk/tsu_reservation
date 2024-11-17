@@ -102,8 +102,9 @@ class LoginController extends CI_Controller {
 		#add api call for tsu api
 		return true;
 	}
+
 	public function logout(){
-	$this->session->unset_userdata();
+	 	$this->session->unset_userdata();
 		redirect('login');
 	}
 }
