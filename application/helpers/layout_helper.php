@@ -491,4 +491,20 @@ if( ! function_exists('_getEventDataById')){
 
 }
 
+if(!function_exists('_getCoursesById')){
+
+    function _getCoursesById($id)
+    {
+
+        $CI =& get_instance();
+        $CI->load->model('MainModel','main_m');
+        $courses = $CI->main_m->getCoursesById($id);
+ 
+        return  $courses->CourseTitle;
+     
+    }
+
+
+}
+
 ?>

@@ -299,4 +299,10 @@ class MainModel extends CI_Model
     $sql = "SELECT * FROM {$this->tbl_event_list} WHERE EventId = {$id}";
     return $this->db->query($sql)->row();
   }
+  public function getCoursesById($id){
+
+    $sql = "SELECT * FROM {$this->tbl_courses} WHERE CourseId  = {$id}";
+    return $this->db->query($sql)->row();
+  }
 }
+

@@ -203,7 +203,7 @@ _headerLayout(['main-view'], 'EVENT | MAIN VIEW')
                                 <div class="d-flex align-items-center w-100 ps-3">
                                     <div class="w-100">
                                         <span class="d-block mb-1"><?= empty(_getUserFullName($_SESSION['username'])) ? 'default_user.jpg' : _getUserFullName($_SESSION['username']) ?></span ?>
-                                        <span class="text-muted small">College of Computer Studies</span>
+                                        <span class="text-muted small"><?= _getCoursesById($CourseId) ?></span>
                                     </div>
                                 </div>
                             </div>
