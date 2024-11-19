@@ -23,9 +23,11 @@ class LoginController extends CI_Controller {
 
 		parent::__construct();
 		$this->load->model('LoginModel','log_m');
+		
 		if(isset($_SESSION['username'])){
             redirect('main-view');
         }
+		$this->load->model('EmailNotifModel','email_m');
 	}
 
 	public function index()
@@ -55,7 +57,17 @@ class LoginController extends CI_Controller {
 
 				#check if api result is true
 				if(!empty($api_result)){
-					$this->log_m->addUser($input_email,$input_pass);
+					$result = $this->log_m->addUser($input_email,$input_pass);
+
+					if($result == true){
+						$content = "
+								<center>Your account has been created.<br>	</center>
+								Username : $input_email<br>
+								Password : $input_pass<br>
+
+								Note: Please do not share your password with anyone.<br>";
+						$this->email_m->sendEmail($input_email,$content,'TSU | Account Created');
+					}
 					$data['message'] = 'USER VERIFIED';
 					$data['status'] = 200;
 					$data['result'] = $api_result;
