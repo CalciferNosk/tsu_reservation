@@ -46,24 +46,49 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
 
 <body>
     <div class="container">
-        <a href="<?= base_url() ?>"><i class="fas fa-home" style="font-size: 15px;"></i></a>
-        <div class="card m-3 p-2">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #800000;">
+            <div class="container-fluid">
+                <!-- Brand -->
+                <a class="navbar-brand" href="#"> <img width="30" style="background-color: white;border-radius: 50%;" src="<?= IMG_LOGO ?>" alt=""></a>
+
+                <!-- Toggler/collapsibe Button -->
+                <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <!-- Collapsible Content -->
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <!-- Links -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link tab-link  " data-content="home" id="nav_home" aria-current="page" href="<?= base_url() ?>">Home</a>
+                        </li>
+                    </ul>
+                    <center>
+                        <h2 style="color:#fec530">EVENT VIEW</h2>
+                    </center>
+                </div>
+            </div>
+        </nav>
+        <br>
+        <br>
+        <div class="card m-5 p-2">
             <div class="card-header">
                 <!-- <span><b><?= $event->EventName ?></b></span> -->
-                <i class="bookmark-icon" data-isbookmarked="<?= _checkBookmarkByEventId($event->EventId,0) ?>" data-eventid="<?= $event->EventId ?>">
-                    <svg id="bookmark-i" width="24" height="24" viewBox="0 0 24 24" fill="<?= _checkBookmarkByEventId($event->EventId,0) == true ? '#fec530' : 'none' ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <i class="bookmark-icon" data-isbookmarked="<?= _checkBookmarkByEventId($event->EventId, 0) ?>" data-eventid="<?= $event->EventId ?>">
+                    <svg id="bookmark-i" width="24" height="24" viewBox="0 0 24 24" fill="<?= _checkBookmarkByEventId($event->EventId, 0) == true ? '#fec530' : 'none' ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
                     </svg>
                 </i>
 
                 <span style="float: right;">
-                    <?php if (in_array($_SESSION['role'],[2,3])):  ?>
+                    <?php if (in_array($_SESSION['role'], [2, 3])):  ?>
                         <select name="time" id="time" class="form-group">
                             <option value="IN">IN</option>
                             <option value="OUT">OUT</option>
                         </select>
                     <?php endif ?>
-                    <?php if (_getDateBetween($event->EventStart, $event->EventEnd) == 1 || in_array($_SESSION['role'],[2,3])):
+                    <?php if (_getDateBetween($event->EventStart, $event->EventEnd) == 1 || in_array($_SESSION['role'], [2, 3])):
                         $token = strtoupper(hash("sha256", $_SESSION['username'] . date("Y-m-d")))
                     ?>
                         <div class="btn-group shadow-0 mb-2">
@@ -78,7 +103,7 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <li><a target="_blank" class="dropdown-item" href="<?= BASE_URL_SSL ?>/scan-qr/<?= $event->EventId ?>"><i class="fa-regular fa-square"></i>Scan QR</a></li>
-                                <?php if (in_array($_SESSION['role'],[2,3])):  ?>
+                                <?php if (in_array($_SESSION['role'], [2, 3])):  ?>
                                     <li><a class="dropdown-item" href="#" id="organizer_qr"> <i class="fas fa-qrcode"></i> Staff QR</a></li>
                                 <?php else: ?>
                                     <li><a class="dropdown-item" href="#" id="generate"> <i class="fas fa-qrcode"></i> Generate QR</a></li>
@@ -86,13 +111,19 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                             </ul>
                         </div>
                     <?php else:
-                    $token = '';
+                        $token = '';
                     ?>
                         <i>Event Unavailable</i>
                     <?php endif; ?>
                 </span>
             </div>
             <div class="body">
+                <center>
+                    <div class="justify-content-center">
+                        <h4> <?= $event->EventName ?></h4>
+                        <p><?= $event->Description ?></p>
+                    </div>
+                </center>
                 <div id="<?= $event->EventId ?>">
                     <?php if (!empty(_getEventPhoto($event->EventId))):  ?>
                         <figure>
@@ -100,14 +131,9 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                                 <img style="width: 50%;" src="<?= base_url() ?>assets/feed_images/<?= _getEventPhoto($event->EventId) ?>" alt="">
                             </center>
                         </figure>
-
                     <?php endif ?>
                 </div>
                 <table>
-                    <tr>
-                        <td><b>Event Name</b></td>
-                        <td>: <?= $event->EventName ?></td>
-                    </tr>
                     <tr>
                         <td><b>Start</b></td>
                         <td>: <?= date('M j, Y hA', strtotime($event->EventStart)) ?></td>
@@ -124,12 +150,14 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                         <td><b>Organizer</b></td>
                         <td>: <?= $event->EventOrganizer ?></td>
                     </tr>
-                    <tr>
-                        <td><b>Description</b></td>
-                        <td>: <?= $event->Description ?></td>
-                    </tr>
                 </table>
-
+                <hr>
+                <div class="m-3">
+                    <legend>
+                        <b>Details</b>
+                    </legend>
+                    <?= $event->Details ?>
+                </div>
             </div>
         </div>
         <!-- Button trigger modal -->
@@ -212,17 +240,16 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
 
             $(document).on('click', '.bookmark-icon', function() {
                 var bookmark = $(this).data('isbookmarked');
-                var event_id = $(this).data('eventid');
-               ;
-                if(bookmark == 1){
-                    $(this).children().attr('fill','none')
-                    $(this).attr('data-isbookmarked',0)
-                }else{
-                    $(this).children().attr('fill','#fec530')
-                    $(this).attr('data-isbookmarked',1)
+                var event_id = $(this).data('eventid');;
+                if (bookmark == 1) {
+                    $(this).children().attr('fill', 'none')
+                    $(this).attr('data-isbookmarked', 0)
+                } else {
+                    $(this).children().attr('fill', '#fec530')
+                    $(this).attr('data-isbookmarked', 1)
                 }
                 $.ajax({
-                    url: base_url+'add-bookmark',
+                    url: base_url + 'add-bookmark',
                     method: 'POST',
                     data: {
                         bookmark: $(this).attr('data-isbookmarked'),
@@ -233,8 +260,9 @@ _headerLayout(['event-view'], 'EVENT | VIEW EVENT')
                         location.reload();
                     }
                 })
-               
+
             })
+
             function isbookmark(animation) {
                 var bookmark = $(this).data('isbookmarked');
             }

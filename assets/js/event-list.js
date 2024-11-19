@@ -61,7 +61,7 @@ $(document).ready(function () {
 		var edit_event_description = $("#edit-event-description").val();
 		var edit_event_id = $("#edit-event-id").val();
 		var edit_event_details = $("#edit-event-details").summernote("code");
-
+		
 		var formdata = new FormData();
 		formdata.append("edit_name", edit_event_name);
 		formdata.append("edit_location", edit_event_location);
@@ -242,6 +242,8 @@ $(document).ready(function () {
 		formData.append("reservation_start", null);
 		formData.append("reservation_end", null);
 		formData.append("description", description);
+		formData.append("details", details);
+
 		var file_mssg = "";
 		if (fileInput == null) {
 			file_mssg = "Save without image? ";

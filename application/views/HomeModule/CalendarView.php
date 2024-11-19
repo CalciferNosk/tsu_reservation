@@ -66,7 +66,7 @@ _headerLayout([], 'EVENT | CALENDAR')
 </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #800000;">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #800000;">
         <div class="container-fluid">
             <!-- Brand -->
             <a class="navbar-brand" href="#"> <img width="30" style="background-color: white;border-radius: 50%;" src="<?= IMG_LOGO ?>" alt=""></a>

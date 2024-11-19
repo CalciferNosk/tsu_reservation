@@ -143,6 +143,8 @@ class EventController extends CI_Controller
     }
     public function addEvent()
     {
+
+
         $store_data = [
             "EventName" => $_POST['event_name'],
             "Description" => $_POST['description'],
@@ -155,7 +157,8 @@ class EventController extends CI_Controller
             "EventReservationEnd" => $_POST['reservation_end'],
             "CreatedBy" => $_SESSION['username'],
             "CreatedDate" => date('Y-m-d H:i:s'),
-            "GeneratedId" => date('YmdHis')
+            "GeneratedId" => date('YmdHis'),
+            "Details" => $_POST['details']
         ];
 
         $store = $this->event_m->insertEvent($store_data);
@@ -218,11 +221,11 @@ class EventController extends CI_Controller
     }
 
     public function updateEvent(){
-
       $data = [
         "EventName" => $_POST['edit_name'],
         "Description" => $_POST['edit_event_description'],
         "EventLocationId" => $_POST['edit_location'],
+        "Details" => $_POST['edit_event_details'],
         "EventOrganizer" => $_POST['edit_organizer'],
         "EventStart" => $_POST['edit_event_start'],
         "EventEnd"    => $_POST['edit_event_end'],
